@@ -1,9 +1,12 @@
 package jlogier.example.com.ampedbrowser;
 
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.DownloadManager;
+import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -11,191 +14,195 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.DownloadListener;
+import android.webkit.URLUtil;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebStorage;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.webkit.WebViewDatabase;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.InetAddress;
+import java.net.CookieManager;
+import java.net.URL;
 
 public class MainActivity extends ActionBarActivity {
 
     protected SharedPreferences prefs;
-
-    private ListView mDrawerList;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private String mActivityTitle;
-    private boolean toggle = false;
-
-    private Integer[] iconArray = { null, null, null, null, null, null, null};
-    private String[] optionsArray = { "Home", "Remote Control", "Power Consumption", "Distribution", "About" };
-    private String[] mDrawerTitles = {"Smart Power Strip", "Remote Control", "Power Consumption", "Distribution"};
-    private int selectedPosition = 0;
+    private WebView webView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ActionBar mActionBar;
+    private float mActionBarHeight;
+    private boolean temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        temp = prefs.getBoolean("private_preference", false);
+        if (temp)
+            setTheme(R.style.AppTheme_Private);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefs = getSharedPreferences("jlogier.example.com.ampedbrowser", Context.MODE_PRIVATE);
+        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
+                new int[] { android.R.attr.actionBarSize });
+        mActionBarHeight = styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+        mActionBar = getSupportActionBar();
 
-
-        LayoutInflater inflater = this.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.mylist, null, true);
-        TextView text = (TextView) rowView.findViewById(R.id.text1);
-
-        mDrawerList = (ListView) findViewById(R.id.navList);
-        //scales the navigation drawer differently for a tablet and phone similar to Google's apps
-        if (isTablet(this)) {
-            mDrawerList.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 320, getResources().getDisplayMetrics());
-        } else {
-            mDrawerList.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-        }
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
-
-        //Launches proper fragment when navigation drawer option is selected
-        addDrawerItems();
-        setupDrawer();
-
-        getSupportActionBar().setCustomView(R.layout.actionbar_layout);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        //Initial screen when app loads
-        browserFragment();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    private void addDrawerItems() {
-        CustomListAdapter adapter = new CustomListAdapter(this, optionsArray, iconArray);
-
-        mDrawerList.setAdapter(adapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        findViewById(R.id.webView).getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedPosition = position;
-                updateFragment();
-                mDrawerLayout.closeDrawer(mDrawerList);
+            public void onScrollChanged() {
+                float mfloat = findViewById(R.id.webView).getScrollY();
+                if (mfloat > mActionBarHeight && mActionBar.isShowing()) {
+                    mActionBar.hide();
+                } else if (mfloat == 0 && !mActionBar.isShowing()) {
+                    mActionBar.show();
+                }
             }
         });
 
-        selectedPosition = 0;
-        updateFragment();
-    }
+        mActionBar.setCustomView(R.layout.actionbar_layout);
+        mActionBar.setDisplayShowCustomEnabled(true);
+        mActionBar.setDisplayHomeAsUpEnabled(false);
+        mActionBar.setHomeButtonEnabled(true);
 
-    private void browserFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        WebViewFragment frag = new WebViewFragment();
+        // Retrieve the SwipeRefreshLayout and ListView instances
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_frame, frag);
-        ft.addToBackStack(null);
-        ft.commit();
+        // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
+        mSwipeRefreshLayout.setColorScheme(
+                R.color.swipe_color_1, R.color.swipe_color_2,
+                R.color.swipe_color_3, R.color.swipe_color_4);
 
-        mActivityTitle = mDrawerTitles[0];
-        invalidateOptionsMenu();
-    }
-
-    private void updateFragment() {
-        /* Getting reference to the FragmentManager */
-        FragmentManager fm = getSupportFragmentManager();
-        //Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-
-        if (selectedPosition == 0) {
-            browserFragment();
-            //sets the action bar title back to the app name when on "home screen"
-            mActivityTitle = mDrawerTitles[0];
-        }
-        else if (selectedPosition == 4) {
-            CharSequence[] ch = { "Amped Browser - Josh Logier\n\nApp Version: " + getVersion() +
-                    "\n\nThis is a lightweight and beautiful browser for basic browsing needs " +
-                    "with no bloat or complicated features. Mobile web made simple." };
-            showDialog("About", ch);
-        }
-    }
-
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Options");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                webView.reload();
             }
+        });
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+		/* Initializing and loading url in WebView */
+        webView = (WebView)findViewById(R.id.webView);
+        webView.setWebViewClient(new MyWebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+
+        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollbarFadingEnabled(true);
+        webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
+        webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
+        webView.clearHistory();
+
+        if (Build.VERSION.SDK_INT >= 21)
+            webView.enableSlowWholeDocumentDraw();
+
+        final EditText searchtext = (EditText) findViewById(R.id.searchbar);
+
+        ImageButton btn = (ImageButton) findViewById(R.id.go_forward);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText searchtext = (EditText) findViewById(R.id.searchbar);
+                String text = searchtext.getText().toString();
+                String newText;
+                if (!text.equals("")) {
+                    newText = checkInput(text);
+                    webView.loadUrl(newText);
+                }
+                searchtext.clearFocus();
+                InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(searchtext.getWindowToken(), 0);
             }
-        };
+        });
 
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
+        searchtext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    EditText searchtext = (EditText) findViewById(R.id.searchbar);
+                    String text = searchtext.getText().toString();
+                    String newText;
+                    if (!text.equals("")) {
+                        newText = checkInput(text);
+                        webView.loadUrl(newText);
+                    }
+                    searchtext.clearFocus();
+                    InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    mgr.hideSoftInputFromWindow(searchtext.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri uri = intent.getData();
+            String address = uri.toString();
+            webView.loadUrl(address);
+        }
 
+        webView.setDownloadListener(new DownloadListener() {
+            public void onDownloadStart(String url, String userAgent,
+                                        String contentDisposition, String mimetype,
+                                        long contentLength) {
+                DownloadManager.Request request = new DownloadManager.Request(
+                        Uri.parse(url));
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimetype));
+                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                dm.enqueue(request);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        //menu.findItem(R.id.urlfield).getActionView();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        /*
+         * Handle action bar item clicks here.
+         */
         int id = item.getItemId();
 
-        /*
-        if (id == R.id.action_refresh) {
-            //Request new data from Raspberry Pi
-            Thread t = requestData();
-            t.start();
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            return true;
-        }*/
-
-        // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (id == R.id.action_home) {
+            webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
+        }
+        else if (id == R.id.action_settings) {
+            Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(i);
             return true;
         }
 
@@ -203,39 +210,39 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    public void onResume() {
+        if (prefs.getBoolean("private_preference", false) != temp)
+            recreate();
+
+        webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
+        webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
+
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
-        // change the title
-        FragmentManager fm = this.getSupportFragmentManager();
-        //fm.popBackStackImmediate();
-        Fragment cur = fm.findFragmentById(R.id.content_frame);
+        EditText searchtext = (EditText) findViewById(R.id.searchbar);
+        searchtext.clearFocus();
 
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
-        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-            mDrawerLayout.closeDrawer(mDrawerList);
+        if(webView.canGoBack()){
+            webView.goBack();
+            return;
         }
 
-        if (cur instanceof WebViewFragment) {
-            selectedPosition = 0;
-            if(WebViewFragment.canGoBack()){
-                WebViewFragment.goBack();
-                return;
-            }
-            else {
-                fm.popBackStackImmediate();
-                super.onBackPressed();
-            }
-        }/* else if (cur instanceof RemoteControlFragment) {
-            selectedPosition = 1;
-            getSupportActionBar().setTitle(mDrawerTitles[1]);
-        } else if (cur instanceof BarChartFragment) {
-            selectedPosition = 2;
-            getSupportActionBar().setTitle(mDrawerTitles[2]);
-        } else if (cur instanceof PieChartFragment) {
-            selectedPosition = 3;
-            getSupportActionBar().setTitle(mDrawerTitles[3]);
-        }*/
         super.onBackPressed();
+    }
+
+    @Override
+    public void onStop() {
+        if (prefs.getBoolean("private_preference", false)) {
+            WebViewDatabase.getInstance(this).clearFormData();
+            android.webkit.CookieManager.getInstance().removeAllCookie();
+            WebStorage.getInstance().deleteAllData();
+            webView.clearCache(true);
+        }
+
+        super.onStop();
     }
 
     public static boolean isTablet(Context context) {
@@ -272,18 +279,37 @@ public class MainActivity extends ActionBarActivity {
         return pInfo.versionName;
     }
 
+    private String checkInput(String text) {
+        String url;
 
-    private boolean checkConnection() {
-        try {
-            byte[] b = new byte[]{(byte) 192, (byte) 168, (byte) 43, (byte) 40};
-            InetAddress addr = InetAddress.getByAddress(b);
-            if (addr.isReachable(325))
-                return true;
-            else
-                return false;
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (text.startsWith("http://") && text.contains(".") && !text.contains(" "))
+            url = text;
+        else if (text.contains(".") && !text.contains(" "))
+            url = "http://" + text;
+        else
+            url = "https://www.google.com/?gws_rd=ssl#q=" + text;
+
+        return url;
+    }
+
+    /**
+     * Web View Client to run web pages within the app
+     *
+     */
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            //Show progress bar in action bar while page loads
+            mSwipeRefreshLayout.setRefreshing(true);
+            EditText searchtext = (EditText) findViewById(R.id.searchbar);
+            searchtext.setText(url);
         }
-        return false;
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            //Hide progress bar in action bar when page is finished loading
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 }

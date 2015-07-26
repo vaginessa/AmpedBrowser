@@ -1,24 +1,15 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- The first child in the layout is for the main Activity UI-->
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
-    <!-- Side navigation drawer UI -->
-    <ListView
-        android:id="@+id/navList"
-        android:layout_width="320dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="#ffeeeeee"
-        android:fontFamily="sans-serif"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"/>
-
-</android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

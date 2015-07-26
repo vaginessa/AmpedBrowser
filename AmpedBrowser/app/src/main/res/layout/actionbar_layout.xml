@@ -14,14 +14,15 @@
         android:textColor="@color/hint_gray"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="10dp"
         android:textColorHint="@color/hint_gray"
         android:hint="@string/hint"
-        android:paddingLeft="10dp"
+        android:paddingLeft="8dp"
         android:elevation="5dp"
         android:singleLine="true"
         android:inputType="textWebEmailAddress"
-        android:imeOptions="actionGo"/>
+        android:imeOptions="actionGo|flagNoExtractUi"
+        android:selectAllOnFocus="true"/>
 
     <ImageButton
         android:id="@+id/go_forward"

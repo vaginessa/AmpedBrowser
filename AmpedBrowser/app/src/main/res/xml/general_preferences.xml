@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/general_preferences" >
+
+        <EditTextPreference
+            android:key="homepage_preference"
+            android:title="@string/title_homepage_preference"
+            android:summary="@string/summary_homepage_preference"
+            android:dialogTitle="@string/dialog_title_homepage_preference"
+            android:dialogMessage="@string/dialog_message_homepage_preference"
+            android:defaultValue="www.google.com"/>
+
+        <CheckBoxPreference
+            android:key="savedata_preference"
+            android:defaultValue="false"
+            android:title="@string/title_savedata_preference"
+            android:summary="@string/summary_savedata_preference"/>
+
+        <CheckBoxPreference
+            android:key="private_preference"
+            android:defaultValue="false"
+            android:title="@string/title_private_preference"
+            android:summary="@string/summary_private_preference" />
+
+        <Preference
+            android:key="rate_preference"
+            android:title="@string/title_rate_preference"
+            android:summary="@string/summary_rate_preference">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=jlogier.example.com.ampedbrowser" />
+        </Preference>
+
+        <Preference
+            android:key="feedback_preference"
+            android:title="@string/title_feedback_preference" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="mailto:ampedbrowser@gmail.com">
+                <extra
+                    android:name="android.intent.extra.SUBJECT"
+                    android:value="@string/email_subject" />
+            </intent>
+        </Preference>
+
+    </PreferenceCategory>
+</PreferenceScreen>

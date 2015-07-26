@@ -5,13 +5,38 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    -- General settings
+    <string name="general_preferences">General</string>
 
-    <string name="action_example">Example action</string>
-    <string name="additional_action">Add</string>
+    -- Homepage preference strings
+    <string name="title_homepage_preference">Set Homepage</string>
+    <string name="summary_homepage_preference">Set the browser\'s homepage</string>
+    <string name="dialog_title_homepage_preference">Homepage</string>
+    <string name="dialog_message_homepage_preference">Set the browser\'s homepage</string>
 
-    <string name="action_refresh">Refresh</string>
+    -- Save data preference strings
+    <string name="title_savedata_preference">Save Data</string>
+    <string name="summary_savedata_preference">This saves data by preventing images from
+        loading</string>
+
+    -- Private Mode Preference strings
+    <string name="title_private_preference">Private Browsing</string>
+    <string name="summary_private_preference">This setting will reset your browsing instance and
+        permanently delete all browsing data at the end of each browsing session. The theme changes
+        to grey to indicate that this setting is enabled.</string>
+
+    -- Rate App Preference strings
+    <string name="title_rate_preference">Rate this app!</string>
+    <string name="summary_rate_preference">If this app is useful to you, please take a moment and
+        rate it! Thanks!</string>
+
+    -- Feedback preference strings
+    <string name="title_feedback_preference">Send feedback</string>
+    <string name="email_subject">Amped Browser Feedback</string>
+
+    <string name="action_home">Home</string>
+    <string name="action_find">Find in page</string>
+    <string name="action_private">Private Mode</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_refresh">Refresh</string>

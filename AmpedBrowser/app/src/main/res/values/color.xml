@@ -4,6 +4,10 @@
     <color name="ColorPrimaryDark">#0277BD</color>
     <color name="ColorAccent">#00BFA5</color>
 
+    <color name="PrivateColorPrimary">#616161</color>
+    <color name="PrivateColorPrimaryDark">#424242</color>
+    <color name="PrivateColorAccent">#D50000</color>
+
     <color name="swipe_color_1">#0266C8</color>
     <color name="swipe_color_2">#F90101</color>
     <color name="swipe_color_3">#F2B50F</color>

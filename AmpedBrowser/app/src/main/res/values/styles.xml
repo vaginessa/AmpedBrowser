@@ -5,7 +5,14 @@
         <item name="colorPrimary">@color/ColorPrimary</item>
         <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/ColorPrimary</item>
-        <!-- Customize your theme here. -->
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Private" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PrivateColorPrimary</item>
+        <item name="colorPrimaryDark">@color/PrivateColorPrimaryDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/PrivateColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
 </resources>
