@@ -1,7 +1,9 @@
 package jlogier.example.com.ampedbrowser;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -16,15 +18,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
@@ -40,10 +46,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.CookieManager;
-import java.net.URL;
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ShareActionProvider.OnShareTargetSelectedListener {
 
     protected SharedPreferences prefs;
     private WebView webView;
@@ -51,14 +54,20 @@ public class MainActivity extends ActionBarActivity {
     private ActionBar mActionBar;
     private float mActionBarHeight;
     private boolean temp;
+    private ShareActionProvider mShareActionProvider = null;
+    private String currentUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         temp = prefs.getBoolean("private_preference", false);
-        if (temp)
+        if (temp) {
             setTheme(R.style.AppTheme_Private);
+        }
         super.onCreate(savedInstanceState);
+
+        // Sets the action bar as an overlay to prevent the view from "jumping" when it is shown or hidden
+        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_main);
 
         final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
@@ -67,17 +76,9 @@ public class MainActivity extends ActionBarActivity {
         styledAttributes.recycle();
         mActionBar = getSupportActionBar();
 
-        findViewById(R.id.webView).getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged() {
-                float mfloat = findViewById(R.id.webView).getScrollY();
-                if (mfloat > mActionBarHeight && mActionBar.isShowing()) {
-                    mActionBar.hide();
-                } else if (mfloat == 0 && !mActionBar.isShowing()) {
-                    mActionBar.show();
-                }
-            }
-        });
+        // Used to get actionbar size
+        final TypedValue typed_value = new TypedValue();
+        getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
 
         mActionBar.setCustomView(R.layout.actionbar_layout);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -86,6 +87,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Retrieve the SwipeRefreshLayout and ListView instances
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId) + 50);
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
         mSwipeRefreshLayout.setColorScheme(
@@ -101,6 +103,20 @@ public class MainActivity extends ActionBarActivity {
 
 		/* Initializing and loading url in WebView */
         webView = (WebView)findViewById(R.id.webView);
+
+        // Use scrollView to allow the webView to slide out from underneath the actionbar overlay
+        findViewById(R.id.scrollView).getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                float mfloat = findViewById(R.id.scrollView).getScrollY();
+                if (mfloat > mActionBarHeight && mActionBar.isShowing()) {
+                    mActionBar.hide();
+                } else if (mfloat <= mActionBarHeight && !mActionBar.isShowing()) {
+                    mActionBar.show();
+                }
+            }
+        });
+
         webView.setWebViewClient(new MyWebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
 
@@ -187,7 +203,20 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.action_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
         return true;
+    }
+
+    @Override
+    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+        Toast.makeText(this, intent.getComponent().toString(), Toast.LENGTH_LONG).show();
+        return(false);
     }
 
     @Override
@@ -199,6 +228,17 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.action_home) {
             webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
+            return true;
+        }
+        else if (id == R.id.action_share) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, currentUrl);
+            Log.d("DEBUG", "CURRENT URL: " + currentUrl);
+
+            if (mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(shareIntent);
+            }
         }
         else if (id == R.id.action_settings) {
             Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -292,6 +332,19 @@ public class MainActivity extends ActionBarActivity {
         return url;
     }
 
+    public static boolean openApp(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        Intent i = manager.getLaunchIntentForPackage(packageName);
+
+        if (i == null) {
+            return false;
+            //throw new PackageManager.NameNotFoundException();
+        }
+        i.addCategory(Intent.CATEGORY_LAUNCHER);
+        context.startActivity(i);
+        return true;
+    }
+
     /**
      * Web View Client to run web pages within the app
      *
@@ -299,11 +352,44 @@ public class MainActivity extends ActionBarActivity {
     private class MyWebViewClient extends WebViewClient {
 
         @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if(url.startsWith("intent://")){
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    // The following flags launch the app outside the current app
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    return true;
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getApplicationContext(), "App not found", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            }
+            else if (Uri.parse(url).getScheme().equals("market")) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    Activity host = (Activity) view.getContext();
+                    host.startActivity(intent);
+                    return true;
+                } catch (ActivityNotFoundException e) {
+                    // Google Play app is not installed, you may want to open the app store link
+                    Uri uri = Uri.parse(url);
+                    view.loadUrl("http://play.google.com/store/apps/" + uri.getHost() + "?" + uri.getQuery());
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             //Show progress bar in action bar while page loads
             mSwipeRefreshLayout.setRefreshing(true);
             EditText searchtext = (EditText) findViewById(R.id.searchbar);
             searchtext.setText(url);
+            currentUrl = url;
         }
 
         @Override

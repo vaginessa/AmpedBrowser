@@ -59,3 +59,8 @@ Version 1.1 Release 7/26/2015
   - Fixed "Save Data" option
   - Fixed "Rate App" option being an empty link
   - Improved swipe to refresh functionality
+  
+Version 1.2 Release 7/29/2015
+  - Added the ability to share links
+  - Added the ability to choose a search engine (more can be added upon request)
+  - Improved actionbar behavior when scrolling

@@ -36,7 +36,7 @@
 
     <string name="action_home">Home</string>
     <string name="action_find">Find in page</string>
-    <string name="action_private">Private Mode</string>
+    <string name="action_share">Share link</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_refresh">Refresh</string>
