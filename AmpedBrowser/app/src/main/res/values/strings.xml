@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">Amped Browser</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-
     -- General settings
     <string name="general_preferences">General</string>
 
@@ -13,6 +9,10 @@
     <string name="summary_homepage_preference">Set the browser\'s homepage</string>
     <string name="dialog_title_homepage_preference">Homepage</string>
     <string name="dialog_message_homepage_preference">Set the browser\'s homepage</string>
+
+    -- Search engine preferences
+    <string name="title_search_preference">Search Engines</string>
+    <string name="dialog_title_search_preference">Search Engines</string>
 
     -- Save data preference strings
     <string name="title_savedata_preference">Save Data</string>
@@ -35,6 +35,7 @@
     <string name="email_subject">Amped Browser Feedback</string>
 
     <string name="action_home">Home</string>
+    <string name="action_desktop">Request desktop site</string>
     <string name="action_find">Find in page</string>
     <string name="action_share">Share link</string>
     <string name="action_settings">Settings</string>

@@ -8,10 +8,17 @@
         <EditTextPreference
             android:key="homepage_preference"
             android:title="@string/title_homepage_preference"
-            android:summary="@string/summary_homepage_preference"
             android:dialogTitle="@string/dialog_title_homepage_preference"
             android:dialogMessage="@string/dialog_message_homepage_preference"
             android:defaultValue="www.google.com"/>
+
+        <ListPreference
+            android:key="search_preference"
+            android:title="@string/title_search_preference"
+            android:dialogTitle="@string/dialog_title_search_preference"
+            android:entries="@array/searchEngines"
+            android:entryValues="@array/searchEnginesValues"
+            android:defaultValue="www.google.com" />
 
         <CheckBoxPreference
             android:key="savedata_preference"

@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">"Amped Browser"</string>
+
+    -- General settings
+    <string name="general_preferences">"General"</string>
+
+    -- Homepage preference strings
+    <string name="title_homepage_preference">"Set Homepage"</string>
+    <string name="summary_homepage_preference">"Stellen Sie die Homepage des Browsers"</string>
+    <string name="dialog_title_homepage_preference">"Startseite"</string>
+    <string name="dialog_message_homepage_preference">"Stellen Sie die Homepage des Browsers"</string>
+
+    -- Search engine preferences
+    <string name="title_search_preference">"Suchmaschinen"</string>
+    <string name="dialog_title_search_preference">"Suchmaschinen"</string>
+
+    -- Save data preference strings
+    <string name="title_savedata_preference">"Daten speichern"</string>
+    <string name="summary_savedata_preference">"Das spart Daten durch die Verhinderung Bilder von Lade"</string>
+
+    -- Private Mode Preference strings
+    <string name="title_private_preference">"Private Browsing"</string>
+    <string name="summary_private_preference">"Diese Einstellung wird Ihren Browser-Instanz zurückzusetzen und alle Browser-Daten am Ende jeder Browsersitzung dauerhaft zu löschen. Die Themenänderungen zu grau, um anzuzeigen, dass diese Einstellung aktiviert ist."</string>
+
+    -- Rate App Preference strings
+    <string name="title_rate_preference">"Bewerte diese App!"</string>
+    <string name="summary_rate_preference">"Wenn diese App ist nützlich für Sie, nehmen Sie sich bitte einen Moment Zeit und bewerten Sie es! Vielen Dank!"</string>
+
+    -- Feedback preference strings
+    <string name="title_feedback_preference">"Feedback abschicken"</string>
+    <string name="email_subject">"Amped Browser Ihre Meinung"</string>
+
+    <string name="action_home">"Zuhause"</string>
+    <string name="action_desktop">"Anfrage Desktop Anwendung"</string>
+    <string name="action_find">"Finde in der Site"</string>
+    <string name="action_share">"Einen Link teilen"</string>
+    <string name="action_settings">"Einstellungen"</string>
+
+    <string name="menu_refresh">"Erfrischen"</string>
+
+    <string name="hint">"Suche oder geben Sie URL"</string>
+    <string name="go">"Gehen"</string>
+    <string name="default_url">"google.com"</string>
+</resources>

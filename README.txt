@@ -63,4 +63,5 @@ Version 1.1 Release 7/26/2015
 Version 1.2 Release 7/29/2015
   - Added the ability to share links
   - Added the ability to choose a search engine (more can be added upon request)
-  - Improved actionbar behavior when scrolling
+  - Greatly improved actionbar behavior and scrolling
+  - Bug fixes

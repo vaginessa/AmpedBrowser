@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="searchEngines" translatable="false">
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo</item>
+        <item>Ask</item>
+        <item>AOL</item>
+        <item>Duck Duck Go</item>
+    </string-array>
+    <string-array name="searchEnginesValues" translatable="false">
+        <item>https://www.google.com/?gws_rd=ssl#q=</item>
+        <item>http://www.bing.com/search?q=</item>
+        <item>http://search.yahoo.com/search;_ylt=A0oG7l7PeB5P3G0AKASl87UF?p=</item>
+        <item>http://www.ask.com/web?q=</item>
+        <item>http://search.aol.com/aol/search?enabled_terms=&amp;s_it=comsearch&amp;q=</item>
+        <item>https://duckduckgo.com/?q=</item>
+    </string-array>
+
+</resources>

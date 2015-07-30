@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">"Amped Tarayıcı"</string>
+
+    -- General settings
+    <string name="general_preferences">"Genel"</string>
+
+    -- Homepage preference strings
+    <string name="title_homepage_preference">"Set Anasayfa"</string>
+    <string name="summary_homepage_preference">"Tarayıcının Anasayfam olarak ayarla"</string>
+    <string name="dialog_title_homepage_preference">"Ana Sayfa"</string>
+    <string name="dialog_message_homepage_preference">"Tarayıcının Anasayfam olarak ayarla"</string>
+
+    -- Search engine preferences
+    <string name="title_search_preference">"Arama motorları"</string>
+    <string name="dialog_title_search_preference">"Arama motorları"</string>
+
+    -- Save data preference strings
+    <string name="title_savedata_preference">"Kaydet Verileri"</string>
+    <string name="summary_savedata_preference">"Bu yükleme görüntüleri engelleyerek verileri kaydeder"</string>
+
+    -- Private Mode Preference strings
+    <string name="title_private_preference">"Private Browsing"</string>
+    <string name="summary_private_preference">"Bu ayar, tarama örneği sıfırlamak ve kalıcı her tarama oturumu sonunda tüm tarama verilerini silecektir. Tema değişiklikleri Bu ayar etkinleştirildiğinde belirtmek için gri."</string>
+
+    -- Rate App Preference strings
+    <string name="title_rate_preference">"Bu uygulamayı oyla!"</string>
+    <string name="summary_rate_preference">"Bu uygulama sizin için yararlı ise, bir dakikanızı ayırın ve bu oranı lütfen! Teşekkürler!"</string>
+
+    -- Feedback preference strings
+    <string name="title_feedback_preference">"Geribildirim yolla"</string>
+    <string name="email_subject">"Amped Tarayıcı Görüşleri"</string>
+
+    <string name="action_home">"Ev"</string>
+    <string name="action_desktop">"Masaüstü sitesi iste"</string>
+    <string name="action_find">"Sayfada bul"</string>
+    <string name="action_share">"Bağlantıyı paylaş"</string>
+    <string name="action_settings">"Ayarlar"</string>
+
+    <string name="menu_refresh">"Yenile"</string>
+
+    <string name="hint">"Arama veya URL girin"</string>
+    <string name="go">"Gitmek"</string>
+    <string name="default_url">"google.com"</string>
+</resources>

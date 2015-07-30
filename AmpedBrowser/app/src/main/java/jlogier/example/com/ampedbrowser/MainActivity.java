@@ -28,6 +28,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -45,6 +46,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 public class MainActivity extends ActionBarActivity implements ShareActionProvider.OnShareTargetSelectedListener {
 
@@ -81,6 +83,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
 
         mActionBar.setCustomView(R.layout.actionbar_layout);
+        mActionBar.setHideOnContentScrollEnabled(true);
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(false);
         mActionBar.setHomeButtonEnabled(true);
@@ -103,17 +106,16 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
 		/* Initializing and loading url in WebView */
         webView = (WebView)findViewById(R.id.webView);
-
-        // Use scrollView to allow the webView to slide out from underneath the actionbar overlay
-        findViewById(R.id.scrollView).getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+        webView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onScrollChanged() {
-                float mfloat = findViewById(R.id.scrollView).getScrollY();
-                if (mfloat > mActionBarHeight && mActionBar.isShowing()) {
-                    mActionBar.hide();
-                } else if (mfloat <= mActionBarHeight && !mActionBar.isShowing()) {
-                    mActionBar.show();
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_SCROLL || action == MotionEvent.ACTION_POINTER_2_DOWN) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
                 }
+
+                v.onTouchEvent(event);
+                return true;
             }
         });
 
@@ -127,6 +129,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.getSettings().setDisplayZoomControls(false);
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(true);
+        webView.getSettings().setUserAgentString(prefs.getString("user_agent", ""));
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setDomStorageEnabled(true);
@@ -203,10 +206,8 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         // Locate MenuItem with ShareActionProvider
         MenuItem item = menu.findItem(R.id.action_share);
-
         // Fetch and store ShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
@@ -230,6 +231,12 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
             return true;
         }
+        else if (id == R.id.action_desktop) {
+            webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36");
+            webView.reload();
+            webView.getSettings().setUserAgentString("");
+            return true;
+        }
         else if (id == R.id.action_share) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
@@ -239,6 +246,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             if (mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(shareIntent);
             }
+            return true;
         }
         else if (id == R.id.action_settings) {
             Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -256,6 +264,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
+        webView.loadUrl(currentUrl);
 
         super.onResume();
     }
@@ -281,6 +290,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             WebStorage.getInstance().deleteAllData();
             webView.clearCache(true);
         }
+
 
         super.onStop();
     }
@@ -327,7 +337,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         else if (text.contains(".") && !text.contains(" "))
             url = "http://" + text;
         else
-            url = "https://www.google.com/?gws_rd=ssl#q=" + text;
+            url = prefs.getString("search_preference", "https://www.google.com/?gws_rd=ssl#q=") + text;
 
         return url;
     }
