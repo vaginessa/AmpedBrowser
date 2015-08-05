@@ -44,7 +44,6 @@ import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -63,10 +62,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String startupUrl = prefs.getString("homepage_preference", "www.google.com");
-        if (savedInstanceState != null) {
-            startupUrl = savedInstanceState.getString("savedUrl");
-        }
         temp = prefs.getBoolean("private_preference", false);
         if (temp) {
             setTheme(R.style.AppTheme_Private);
@@ -74,28 +69,28 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         super.onCreate(savedInstanceState);
 
         // Sets the action bar as an overlay to prevent the view from "jumping" when it is shown or hidden
-        //supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_main);
 
         final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
                 new int[] { android.R.attr.actionBarSize });
         mActionBarHeight = styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
+        mActionBar = getSupportActionBar();
 
         // Used to get actionbar size
-        final TypedValue typed_value=new TypedValue();
+        final TypedValue typed_value = new TypedValue();
         getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
 
-        mActionBar = getSupportActionBar();
         mActionBar.setCustomView(R.layout.actionbar_layout);
-        //mActionBar.setHideOnContentScrollEnabled(true);
+        mActionBar.setHideOnContentScrollEnabled(true);
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(false);
         mActionBar.setHomeButtonEnabled(true);
 
         // Retrieve the SwipeRefreshLayout and ListView instances
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+        mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId) + 50);
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
         mSwipeRefreshLayout.setColorScheme(
@@ -114,13 +109,9 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                float mfloat = findViewById(R.id.webView).getScrollY();
-                if (mfloat > mActionBarHeight) {
-                    //findViewById(R.id.swipe_container).setPadding(0, 0, 0, 0);
-                    mActionBar.hide();
-                } else if ( mfloat == 0 ) {
-                    //findViewById(R.id.swipe_container).setPadding(0, (int)mActionBarHeight, 0, 0);
-                    mActionBar.show();
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_SCROLL || action == MotionEvent.ACTION_POINTER_2_DOWN) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
                 }
 
                 v.onTouchEvent(event);
@@ -136,9 +127,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
-        webView.setVerticalScrollBarEnabled(true);
-        webView.setHorizontalScrollBarEnabled(true);
-        webView.requestFocusFromTouch();
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(true);
         webView.getSettings().setUserAgentString(prefs.getString("user_agent", ""));
@@ -146,10 +134,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.loadUrl("http://" + startupUrl);
+        webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
         webView.clearHistory();
 
         if (Build.VERSION.SDK_INT >= 21)
@@ -218,13 +203,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString("savedUrl", currentUrl);
-
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -286,6 +264,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
+        webView.loadUrl(currentUrl);
 
         super.onResume();
     }
