@@ -8,11 +8,73 @@
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-    <style name="AppTheme_Private" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_Private" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/PrivateColorPrimary</item>
         <item name="colorPrimaryDark">@color/PrivateColorPrimaryDark</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/PrivateColorPrimary</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
+    <style name="AppTheme_Black" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/BlackColor</item>
+        <item name="colorPrimaryDark">@color/BlackColor</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/BlackColor</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Red" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/RedColorPrimary</item>
+        <item name="colorPrimaryDark">@color/RedColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/RedColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Orange" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/OrangeColorPrimary</item>
+        <item name="colorPrimaryDark">@color/OrangeColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/OrangeColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Yellow" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/YellowColorPrimary</item>
+        <item name="colorPrimaryDark">@color/YellowColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/YellowColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Green" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/GreenColorPrimary</item>
+        <item name="colorPrimaryDark">@color/GreenColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/GreenColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Purple" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PurpleColorPrimary</item>
+        <item name="colorPrimaryDark">@color/PurpleColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/PurpleColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Pink" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/PinkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/PinkColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/PinkColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Teal" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/TealColorPrimary</item>
+        <item name="colorPrimaryDark">@color/TealColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/TealColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme_Brown" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/BrownColorPrimary</item>
+        <item name="colorPrimaryDark">@color/BrownColorDark</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/BrownColorPrimary</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
 </resources>

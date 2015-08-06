@@ -20,6 +20,19 @@
             android:entryValues="@array/searchEnginesValues"
             android:defaultValue="www.google.com" />
 
+        <ListPreference
+            android:key="theme_preference"
+            android:title="@string/title_theme_preference"
+            android:dialogTitle="@string/dialog_title_theme_preference"
+            android:entries="@array/themeColors"
+            android:entryValues="@array/themeColorsValues"
+            android:defaultValue="default"/>
+
+        <CheckBoxPreference
+            android:key="fullscreen_preference"
+            android:title="@string/title_fullscreen_preference"
+            android:defaultValue="false" />
+
         <CheckBoxPreference
             android:key="savedata_preference"
             android:defaultValue="false"
@@ -31,6 +44,21 @@
             android:defaultValue="false"
             android:title="@string/title_private_preference"
             android:summary="@string/summary_private_preference" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/advanced_preferences">
+
+        <CheckBoxPreference
+            android:key="adblock_preference"
+            android:defaultValue="false"
+            android:title="@string/title_adblock_preference"
+            android:summary="@string/summary_adblock_preference"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/other_preferences">
 
         <Preference
             android:key="rate_preference"
@@ -52,6 +80,5 @@
                     android:value="@string/email_subject" />
             </intent>
         </Preference>
-
     </PreferenceCategory>
 </PreferenceScreen>

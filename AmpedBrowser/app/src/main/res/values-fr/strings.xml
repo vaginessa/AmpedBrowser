@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">"Amped Browser"</string>
 
-    -- General settings
+    -- General settings strings
     <string name="general_preferences">"General"</string>
+    <string name="advanced_preferences">"Advanced"</string>
+    <string name="other_preferences">"Other"</string>
 
     -- Homepage preference strings
     <string name="title_homepage_preference">"Set Homepage"</string>
@@ -10,14 +12,27 @@
     <string name="dialog_title_homepage_preference">"Homepage"</string>
     <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
 
-    -- Search engine preferences
-    <string name="title_search_preference">"Search Engines"</string>
+    -- Search engine preference strings
+    <string name="title_search_preference">"Choose Search Engine"</string>
     <string name="dialog_title_search_preference">"Search Engines"</string>
+
+    -- Theme preference strings
+    <string name="title_theme_preference">"Choose Theme"</string>
+    <string name="dialog_title_theme_preference">"Themes"</string>
+
+    -- Fullscreen preference strings
+    <string name="title_fullscreen_preference">"Fullscreen mode"</string>
 
     -- Save data preference strings
     <string name="title_savedata_preference">"Save Data"</string>
     <string name="summary_savedata_preference">"This saves data by preventing images from
         loading"</string>
+
+    -- Adblock preference strings
+    <string name="title_adblock_preference">"Remove Intrusive Ads"</string>
+    <string name="summary_adblock_preference">"This option removes many ads as well as improves
+        security by preventing JavaScript from running. This may cause some websites that rely
+        heavily on javascript to stop working."</string>
 
     -- Private Mode Preference strings
     <string name="title_private_preference">"Private Browsing"</string>
@@ -35,6 +50,7 @@
     <string name="email_subject">"Amped Browser Feedback"</string>
 
     <string name="action_home">"Home"</string>
+    <string name="action_window">"New window"</string>
     <string name="action_desktop">"Request desktop site"</string>
     <string name="action_find">"Find in page"</string>
     <string name="action_share">"Share link"</string>

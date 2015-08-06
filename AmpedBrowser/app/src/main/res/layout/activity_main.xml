@@ -11,7 +11,7 @@
         android:layout_height="fill_parent"
         android:nestedScrollingEnabled="true">
 
-        <WebView
+        <jlogier.example.com.ampedbrowser.MyWebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,5 +19,4 @@
             android:focusable="true"
             android:focusableInTouchMode="true"/>
     </ScrollView>
-
 </android.support.v4.widget.SwipeRefreshLayout>

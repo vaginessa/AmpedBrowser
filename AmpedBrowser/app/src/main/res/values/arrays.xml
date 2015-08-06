@@ -18,4 +18,29 @@
         <item>https://duckduckgo.com/?q=</item>
     </string-array>
 
+    <string-array name="themeColors" translatable="false">
+        <item>Black</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Pink</item>
+        <item>Teal</item>
+        <item>Brown</item>
+    </string-array>
+    <string-array name="themeColorsValues" translatable="false">
+        <item>black</item>
+        <item>red</item>
+        <item>orange</item>
+        <item>yellow</item>
+        <item>green</item>
+        <item>blue</item>
+        <item>purple</item>
+        <item>pink</item>
+        <item>teal</item>
+        <item>brown</item>
+    </string-array>
+
 </resources>

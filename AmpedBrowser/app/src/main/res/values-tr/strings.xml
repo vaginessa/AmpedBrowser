@@ -1,44 +1,64 @@
 <resources>
-    <string name="app_name">"Amped Tarayıcı"</string>
+    <string name="app_name">"Amped Browser"</string>
 
-    -- General settings
-    <string name="general_preferences">"Genel"</string>
+    -- General settings strings
+    <string name="general_preferences">"General"</string>
+    <string name="advanced_preferences">"Advanced"</string>
+    <string name="other_preferences">"Other"</string>
 
     -- Homepage preference strings
-    <string name="title_homepage_preference">"Set Anasayfa"</string>
-    <string name="summary_homepage_preference">"Tarayıcının Anasayfam olarak ayarla"</string>
-    <string name="dialog_title_homepage_preference">"Ana Sayfa"</string>
-    <string name="dialog_message_homepage_preference">"Tarayıcının Anasayfam olarak ayarla"</string>
+    <string name="title_homepage_preference">"Set Homepage"</string>
+    <string name="summary_homepage_preference">"Set the browser's homepage"</string>
+    <string name="dialog_title_homepage_preference">"Homepage"</string>
+    <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
 
-    -- Search engine preferences
-    <string name="title_search_preference">"Arama motorları"</string>
-    <string name="dialog_title_search_preference">"Arama motorları"</string>
+    -- Search engine preference strings
+    <string name="title_search_preference">"Choose Search Engine"</string>
+    <string name="dialog_title_search_preference">"Search Engines"</string>
+
+    -- Theme preference strings
+    <string name="title_theme_preference">"Choose Theme"</string>
+    <string name="dialog_title_theme_preference">"Themes"</string>
+
+    -- Fullscreen preference strings
+    <string name="title_fullscreen_preference">"Fullscreen mode"</string>
 
     -- Save data preference strings
-    <string name="title_savedata_preference">"Kaydet Verileri"</string>
-    <string name="summary_savedata_preference">"Bu yükleme görüntüleri engelleyerek verileri kaydeder"</string>
+    <string name="title_savedata_preference">"Save Data"</string>
+    <string name="summary_savedata_preference">"This saves data by preventing images from
+        loading"</string>
+
+    -- Adblock preference strings
+    <string name="title_adblock_preference">"Remove Intrusive Ads"</string>
+    <string name="summary_adblock_preference">"This option removes many ads as well as improves
+        security by preventing JavaScript from running. This may cause some websites that rely
+        heavily on javascript to stop working."</string>
 
     -- Private Mode Preference strings
     <string name="title_private_preference">"Private Browsing"</string>
-    <string name="summary_private_preference">"Bu ayar, tarama örneği sıfırlamak ve kalıcı her tarama oturumu sonunda tüm tarama verilerini silecektir. Tema değişiklikleri Bu ayar etkinleştirildiğinde belirtmek için gri."</string>
+    <string name="summary_private_preference">"This setting will reset your browsing instance and
+        permanently delete all browsing data at the end of each browsing session. The theme changes
+        to grey to indicate that this setting is enabled."</string>
 
     -- Rate App Preference strings
-    <string name="title_rate_preference">"Bu uygulamayı oyla!"</string>
-    <string name="summary_rate_preference">"Bu uygulama sizin için yararlı ise, bir dakikanızı ayırın ve bu oranı lütfen! Teşekkürler!"</string>
+    <string name="title_rate_preference">"Rate this app!"</string>
+    <string name="summary_rate_preference">"If this app is useful to you, please take a moment and
+        rate it! Thanks!"</string>
 
     -- Feedback preference strings
-    <string name="title_feedback_preference">"Geribildirim yolla"</string>
-    <string name="email_subject">"Amped Tarayıcı Görüşleri"</string>
+    <string name="title_feedback_preference">"Send feedback"</string>
+    <string name="email_subject">"Amped Browser Feedback"</string>
 
-    <string name="action_home">"Ev"</string>
-    <string name="action_desktop">"Masaüstü sitesi iste"</string>
-    <string name="action_find">"Sayfada bul"</string>
-    <string name="action_share">"Bağlantıyı paylaş"</string>
-    <string name="action_settings">"Ayarlar"</string>
+    <string name="action_home">"Home"</string>
+    <string name="action_window">"New window"</string>
+    <string name="action_desktop">"Request desktop site"</string>
+    <string name="action_find">"Find in page"</string>
+    <string name="action_share">"Share link"</string>
+    <string name="action_settings">"Settings"</string>
 
-    <string name="menu_refresh">"Yenile"</string>
+    <string name="menu_refresh">"Refresh"</string>
 
-    <string name="hint">"Arama veya URL girin"</string>
-    <string name="go">"Gitmek"</string>
+    <string name="hint">"Search or enter URL"</string>
+    <string name="go">"Go"</string>
     <string name="default_url">"google.com"</string>
 </resources>

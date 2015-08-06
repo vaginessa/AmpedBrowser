@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">"متصفح Amped"</string>
+
+    -- General settings strings
+    <string name="general_preferences">"عام"</string>
+    <string name="advanced_preferences">"متقدم"</string>
+    <string name="other_preferences">"آخر"</string>
+
+    -- Homepage preference strings
+    <string name="title_homepage_preference">"تعيين الصفحة الرئيسية"</string>
+    <string name="summary_homepage_preference">"تعيين الصفحة الرئيسية للمتصفح"</string>
+    <string name="dialog_title_homepage_preference">"الصفحة الرئيسية"</string>
+    <string name="dialog_message_homepage_preference">"تعيين الصفحة الرئيسية للمتصفح"</string>
+
+    -- Search engine preference strings
+    <string name="title_search_preference">"اختيار محرك البحث"</string>
+    <string name="dialog_title_search_preference">"محركات البحث"</string>
+
+    -- Theme preference strings
+    <string name="title_theme_preference">"اختيار موضوع"</string>
+    <string name="dialog_title_theme_preference">"الموضوعات"</string>
+
+    -- Fullscreen preference strings
+    <string name="title_fullscreen_preference">"وضع ملء الشاشة"</string>
+
+    -- Save data preference strings
+    <string name="title_savedata_preference">"احفظ البيانات"</string>
+    <string name="summary_savedata_preference">"وهذا يوفر البيانات عن طريق منع الصور من التحميل"</string>
+
+    -- Adblock preference strings
+    <string name="title_adblock_preference">"إزالة التطفل الإعلانات"</string>
+    <string name="summary_adblock_preference">"هذا الخيار يزيل العديد من الاعلانات وكذلك تحسن الوضع الأمني ​​من خلال منع جافا سكريبت من التشغيل. قد يسبب هذا بعض المواقع التي تعتمد اعتمادا كبيرا على جافا سكريبت للتوقف عن العمل."</string>
+
+    -- Private Mode Preference strings
+    <string name="title_private_preference">"تصفح خاص"</string>
+    <string name="summary_private_preference">"وهذا الإعداد إعادة المثال التصفح الخاص بك وحذف جميع بيانات التصفح بشكل دائم في نهاية كل جلسة التصفح. التغييرات موضوع للرمادي للإشارة إلى أن يتم تمكين هذا الإعداد."</string>
+
+    -- Rate App Preference strings
+    <string name="title_rate_preference">"قيم هذا التطبيق!"</string>
+    <string name="summary_rate_preference">"إذا كان هذا التطبيق هو مفيد لكم، يرجى ان نتوقف لحظة ومعدل ذلك! شكر!"</string>
+
+    -- Feedback preference strings
+    <string name="title_feedback_preference">"إرسال الملاحظات"</string>
+    <string name="email_subject">"Amped متصفح ملاحظات"</string>
+
+    <string name="action_home">"الصفحة الرئيسية"</string>
+    <string name="action_window">"نافذة جديدة"</string>
+    <string name="action_desktop">"طلب موقع سطح المكتب"</string>
+    <string name="action_find">"البحث في الصفحة"</string>
+    <string name="action_share">"رابط المشاركة"</string>
+    <string name="action_settings">"إعدادات"</string>
+
+    <string name="menu_refresh">"تحديث"</string>
+
+    <string name="hint">"بحث أو إدخال URL"</string>
+    <string name="go">"اذهب"</string>
+    <string name="default_url">"google.com"</string>
+</resources>

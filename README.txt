@@ -13,7 +13,7 @@ Development priority is as follows:
   
 Settings Options
   - Set homepage +
-  - Theme color
+  - Theme color +
   - Save data (don't load images) +
   - Private browsing - deletes all browser data when app session ends +
   - Clear all browsing data on exit +
@@ -65,3 +65,11 @@ Version 1.2 Release 7/29/2015
   - Added the ability to choose a search engine (more can be added upon request)
   - Greatly improved actionbar behavior and scrolling
   - Bug fixes
+
+Version 1.3 Release 8/5/2015
+  - Proper hyperlink/image handling
+  - Adjusted settings screen
+  - Option to disable JavaScript for improved security and basic adblocking
+  - Multiple window support
+  - Theme color options
+  - Fullscreen option

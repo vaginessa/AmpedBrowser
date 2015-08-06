@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
 import android.content.Context;
@@ -25,13 +26,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
@@ -43,6 +47,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,11 +56,13 @@ import android.widget.Toolbar;
 public class MainActivity extends ActionBarActivity implements ShareActionProvider.OnShareTargetSelectedListener {
 
     protected SharedPreferences prefs;
-    private WebView webView;
+    private MyWebView webView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ActionBar mActionBar;
     private float mActionBarHeight;
     private boolean temp;
+    private String theme = "default";
+    private boolean screentoggle;
     private ShareActionProvider mShareActionProvider = null;
     private String currentUrl;
 
@@ -63,9 +70,38 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         temp = prefs.getBoolean("private_preference", false);
-        if (temp) {
+        screentoggle = prefs.getBoolean("fullscreen_preference", false);
+        theme = prefs.getString("theme_preference", "default");
+        if (temp)
             setTheme(R.style.AppTheme_Private);
+        else if (theme.equals("black"))
+            setTheme(R.style.AppTheme_Black);
+        else if (theme.equals("red"))
+            setTheme(R.style.AppTheme_Red);
+        else if (theme.equals("orange"))
+            setTheme(R.style.AppTheme_Orange);
+        else if (theme.equals("yellow"))
+            setTheme(R.style.AppTheme_Yellow);
+        else if (theme.equals("green"))
+            setTheme(R.style.AppTheme_Green);
+        else if (theme.equals("blue"))
+            setTheme(R.style.AppTheme);
+        else if (theme.equals("purple"))
+            setTheme(R.style.AppTheme_Purple);
+        else if (theme.equals("pink"))
+            setTheme(R.style.AppTheme_Pink);
+        else if (theme.equals("teal"))
+            setTheme(R.style.AppTheme_Teal);
+        else if (theme.equals("brown"))
+            setTheme(R.style.AppTheme_Brown);
+        else
+            setTheme(R.style.AppTheme);
+
+        if (prefs.getBoolean("fullscreen_preference", false)) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         }
+
         super.onCreate(savedInstanceState);
 
         // Sets the action bar as an overlay to prevent the view from "jumping" when it is shown or hidden
@@ -105,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         });
 
 		/* Initializing and loading url in WebView */
-        webView = (WebView)findViewById(R.id.webView);
+        webView = (MyWebView)findViewById(R.id.webView);
         webView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -122,6 +158,8 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.setWebViewClient(new MyWebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
 
+        registerForContextMenu(webView);
+
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.getSettings().setSupportZoom(true);
@@ -133,7 +171,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(!prefs.getBoolean("adblock_preference", false));
         webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
         webView.clearHistory();
 
@@ -231,8 +269,24 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
             return true;
         }
+        else if (id == R.id.action_window) {
+            Intent newWindow = new Intent(this, MainActivity.class);
+            newWindow.setType("text/plain");
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                newWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK |
+                        Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS);
+            }
+            else {
+                newWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            }
+            newWindow.putExtra(Intent.ACTION_VIEW, prefs.getString("homepage_preference",
+                    prefs.getString("search_preference", "www.google.com")));
+            startActivity(newWindow);
+        }
         else if (id == R.id.action_desktop) {
-            webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36");
+            webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.3; Win64; x64) " +
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36");
             webView.reload();
             webView.getSettings().setUserAgentString("");
             return true;
@@ -241,7 +295,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, currentUrl);
-            Log.d("DEBUG", "CURRENT URL: " + currentUrl);
 
             if (mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(shareIntent);
@@ -259,12 +312,22 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
     @Override
     public void onResume() {
-        if (prefs.getBoolean("private_preference", false) != temp)
+        if (prefs.getBoolean("private_preference", false) != temp || !prefs.getString("theme_preference", "default").equals(theme))
             recreate();
+        else if (prefs.getBoolean("fullscreen_preference", false) && !screentoggle) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            recreate();
+        }
+        else if (!prefs.getBoolean("fullscreen_preference", false) && screentoggle) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            recreate();
+        }
 
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
-        webView.loadUrl(currentUrl);
+        //webView.loadUrl(currentUrl);
 
         super.onResume();
     }
@@ -290,7 +353,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             WebStorage.getInstance().deleteAllData();
             webView.clearCache(true);
         }
-
 
         super.onStop();
     }
@@ -363,7 +425,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.startsWith("intent://")){
+            if(url.startsWith("intent:")){
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     // The following flags launch the app outside the current app
@@ -375,7 +437,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     return true;
                 }
             }
-            else if (Uri.parse(url).getScheme().equals("market")) {
+            else if (url.startsWith("market://")) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(url));
@@ -389,8 +451,27 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     return false;
                 }
             }
+            else if (url.startsWith("mailto:")) {
+                MailTo mt = MailTo.parse(url);
+                Intent i = newEmailIntent(MainActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+                startActivity(i);
+                view.reload();
+                return true;
+            }
+            else {
+                view.loadUrl(url);
+            }
+            return true;
+        }
 
-            return false;
+        public Intent newEmailIntent(Context context, String address, String subject, String body, String cc) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+            intent.putExtra(Intent.EXTRA_TEXT, body);
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intent.putExtra(Intent.EXTRA_CC, cc);
+            intent.setType("message/rfc822");
+            return intent;
         }
 
         @Override
@@ -406,6 +487,37 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         public void onPageFinished(WebView view, String url) {
             //Hide progress bar in action bar when page is finished loading
             mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+
+            if (url.startsWith("http://www.youtube.com/get_video_info?")) {
+                try {
+                    String path = url.replace("http://www.youtube.com/get_video_info?", "");
+
+                    String[] parqamValuePairs = path.split("&");
+
+                    String videoId = null;
+
+                    for (String pair : parqamValuePairs) {
+                        if (pair.startsWith("video_id")) {
+                            videoId = pair.split("=")[1];
+                            break;
+                        }
+                    }
+
+                    if(videoId != null){
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com"))
+                                .setData(Uri.parse("http://www.youtube.com/watch?v=" + videoId)));
+
+                        return;
+                    }
+                } catch (Exception ex) {
+                }
+            } else {
+                super.onLoadResource(view, url);
+            }
         }
     }
 }
