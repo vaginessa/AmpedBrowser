@@ -73,3 +73,11 @@ Version 1.3 Release 8/5/2015
   - Multiple window support
   - Theme color options
   - Fullscreen option
+
+Version 1.4 Release 8/10/2015
+  - NEW: Bookmarks! Simple bookmark manager in a custom navigation drawer that can be swiped in from the right
+  - NEW: Find in page support
+  - NEW: Option to define a custom user agent
+  - FIXED: Request desktop site did not work for many websites
+  - FIXED: Reduced the sensitivity of the swipe to refresh action to prevent accidental page refreshes
+  - Bug fixes and improvements

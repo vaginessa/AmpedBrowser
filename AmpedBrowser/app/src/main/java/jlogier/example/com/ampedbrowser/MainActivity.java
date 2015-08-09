@@ -19,7 +19,9 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -46,28 +48,51 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 public class MainActivity extends ActionBarActivity implements ShareActionProvider.OnShareTargetSelectedListener {
 
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
     protected SharedPreferences prefs;
+    private ActionBar mActionBar;
     private MyWebView webView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ActionBar mActionBar;
-    private float mActionBarHeight;
     private boolean temp;
     private String theme = "default";
     private boolean screentoggle;
     private ShareActionProvider mShareActionProvider = null;
     private String currentUrl;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        context = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         temp = prefs.getBoolean("private_preference", false);
         screentoggle = prefs.getBoolean("fullscreen_preference", false);
@@ -108,10 +133,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_main);
 
-        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
-        mActionBarHeight = styledAttributes.getDimension(0, 0);
-        styledAttributes.recycle();
         mActionBar = getSupportActionBar();
 
         // Used to get actionbar size
@@ -133,6 +154,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 R.color.swipe_color_1, R.color.swipe_color_2,
                 R.color.swipe_color_3, R.color.swipe_color_4);
 
+        mSwipeRefreshLayout.setDistanceToTriggerSync(400);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -161,6 +183,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         registerForContextMenu(webView);
 
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView.getSettings().setUserAgentString(prefs.getString("ua_preference", ""));
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
@@ -238,6 +261,57 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 dm.enqueue(request);
             }
         });
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.right_drawer);
+
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                String[] bookmarkTitles = loadArray("bookmark_titles", getApplicationContext());
+
+                // Set the adapter for the list view
+                mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(),
+                        R.layout.drawer_list_item, bookmarkTitles));
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            String[] bookmarkUrls = loadArray("bookmark_urls", context);
+            mDrawerLayout.closeDrawers();
+
+            if (Build.VERSION.SDK_INT >= 21 && prefs.getBoolean("bookmark_preference", true)) {
+                Intent newWindow = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmarkUrls[position]), context, MainActivity.class);
+
+                newWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK |
+                        Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS);
+
+                startActivity(newWindow);
+            }
+            else
+                webView.loadUrl(bookmarkUrls[position]);
+        }
     }
 
     @Override
@@ -280,15 +354,16 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             else {
                 newWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             }
-            newWindow.putExtra(Intent.ACTION_VIEW, prefs.getString("homepage_preference",
-                    prefs.getString("search_preference", "www.google.com")));
             startActivity(newWindow);
         }
+        else if (id == R.id.action_bookmarks) {
+            // Add to shared prefs, then update drawer list
+            addBookmark();
+        }
         else if (id == R.id.action_desktop) {
-            webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.3; Win64; x64) " +
-                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.125 Safari/537.36");
+            webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Chrome/44.0.2403.133 Safari/537.36");
             webView.reload();
-            webView.getSettings().setUserAgentString("");
             return true;
         }
         else if (id == R.id.action_share) {
@@ -320,14 +395,14 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             recreate();
         }
         else if (!prefs.getBoolean("fullscreen_preference", false) && screentoggle) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             recreate();
         }
 
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
-        //webView.loadUrl(currentUrl);
 
         super.onResume();
     }
@@ -337,11 +412,10 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         EditText searchtext = (EditText) findViewById(R.id.searchbar);
         searchtext.clearFocus();
 
-        if(webView.canGoBack()){
+        if(webView.canGoBack()) {
             webView.goBack();
             return;
         }
-
         super.onBackPressed();
     }
 
@@ -363,43 +437,18 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public void showDialog(String title, CharSequence[] items) {
-        Log.d("DEBUG", "function showdialog");
-        final CharSequence[] fitems = items;
-
-        AlertDialog.Builder lmenu = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-
-        final AlertDialog ad = lmenu.create();
-        lmenu.setTitle(title);
-        lmenu.setMessage(fitems[0]);
-        lmenu.setPositiveButton("Close", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                ad.dismiss();
-            }
-        });
-        lmenu.show();
-    }
-
-    //Gets version number to display in about so I don't need to remember to update this
-    private String getVersion() {
-        PackageInfo pInfo = null;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return pInfo.versionName;
-    }
-
     private String checkInput(String text) {
         String url;
 
-        if (text.startsWith("http://") && text.contains(".") && !text.contains(" "))
+        if (text.startsWith("http://") || text.startsWith("https://") && text.contains(".") &&
+                !text.contains(" "))
             url = text;
         else if (text.contains(".") && !text.contains(" "))
             url = "http://" + text;
-        else
-            url = prefs.getString("search_preference", "https://www.google.com/?gws_rd=ssl#q=") + text;
+        else {
+            url = prefs.getString("search_preference", "http://www.google.com/search?site=&oq=") +
+                    text.replace(" ", "+");
+        }
 
         return url;
     }
@@ -417,6 +466,66 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         return true;
     }
 
+    public void addBookmark() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View textEntryView = factory.inflate(R.layout.add_bookmark_dialog, null);
+        final AlertDialog.Builder alert;
+        if (prefs.getString("theme_preference", "blue").equals("black") ||
+                prefs.getBoolean("private_preference", false)) {
+             alert = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+        }
+        else {
+            alert = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        }
+        alert.setView(textEntryView);
+        final EditText titleText = (EditText) textEntryView.findViewById(R.id.bookmarkTitle);
+        final EditText urlText = (EditText) textEntryView.findViewById(R.id.bookmarkUrl);
+        titleText.setText(webView.getTitle());
+        urlText.setText(webView.getUrl());
+
+        alert.setTitle("Add Bookmark")
+                .setPositiveButton("Add",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Add title and url to shared prefs
+                                addToArray("bookmark_titles", titleText.getText().toString(), getApplicationContext());
+                                addToArray("bookmark_urls", urlText.getText().toString(), getApplicationContext());
+
+                                Toast.makeText(getApplicationContext(), "Added to bookmarks", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int whichButton) {
+                                dialog.cancel();
+                            }
+                        });
+        alert.show();
+    }
+
+    public String[] loadArray(String arrayName, Context mContext) {
+        int size = prefs.getInt(arrayName + "_size", 0);
+        String array[] = new String[size];
+        for(int i=0;i<size;i++)
+            array[i] = prefs.getString(arrayName + "_" + i, null);
+        return array;
+    }
+
+    public boolean addToArray(String arrayName, String newString, Context mContext) {
+        SharedPreferences.Editor editor = prefs.edit();
+        int size = prefs.getInt(arrayName + "_size", 0);
+        int newSize = size + 1;
+        editor.putInt(arrayName + "_size", newSize);
+
+        String array[] = new String[newSize];
+        for(int i=0;i<size;i++)
+            array[i] = prefs.getString(arrayName + "_" + i, null);
+        editor.putString(arrayName + "_" + size, newString);
+
+        return editor.commit();
+    }
+
     /**
      * Web View Client to run web pages within the app
      *
@@ -425,11 +534,12 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.startsWith("intent:")){
+            if(url.startsWith("intent://")){
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     // The following flags launch the app outside the current app
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
                     startActivity(intent);
                     return true;
                 } catch (ActivityNotFoundException e) {
@@ -451,11 +561,11 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     return false;
                 }
             }
-            else if (url.startsWith("mailto:")) {
+            else if (url.startsWith("mailto://")) {
                 MailTo mt = MailTo.parse(url);
                 Intent i = newEmailIntent(MainActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
                 startActivity(i);
-                view.reload();
+                //view.reload();
                 return true;
             }
             else {

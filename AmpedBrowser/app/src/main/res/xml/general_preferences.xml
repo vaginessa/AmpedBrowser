@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <PreferenceCategory
         android:title="@string/general_preferences" >
@@ -29,6 +29,12 @@
             android:defaultValue="default"/>
 
         <CheckBoxPreference
+            tools:targetApi="21"
+            android:key="bookmark_preference"
+            android:title="@string/title_bookmark_preference"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
             android:key="fullscreen_preference"
             android:title="@string/title_fullscreen_preference"
             android:defaultValue="false" />
@@ -55,6 +61,12 @@
             android:defaultValue="false"
             android:title="@string/title_adblock_preference"
             android:summary="@string/summary_adblock_preference"/>
+        <EditTextPreference
+            android:key="ua_preference"
+            android:title="@string/title_ua_preference"
+            android:summary="@string/summary_ua_preference"
+            android:dialogTitle="@string/dialog_title_ua_preference"
+            android:defaultValue=""/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -80,5 +92,11 @@
                     android:value="@string/email_subject" />
             </intent>
         </Preference>
+
+        <jlogier.example.com.ampedbrowser.MyDialogPreference
+            android:key="dialog_preference"
+            android:title="@string/title_dialog_preference"
+            android:negativeButtonText=""
+            android:positiveButtonText="Close"/>
     </PreferenceCategory>
 </PreferenceScreen>

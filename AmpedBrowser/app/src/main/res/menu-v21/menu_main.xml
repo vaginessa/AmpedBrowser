@@ -10,6 +10,9 @@
         android:title="@string/action_window"
         app:showAsAction="never"
         android:minSdkVersion="21"/>
+    <item android:id="@+id/action_bookmarks"
+        android:title="@string/action_bookmarks"
+        app:showAsAction="never"/>
     <item android:id="@+id/action_desktop"
         android:title="@string/action_desktop"
         app:showAsAction="never" />
