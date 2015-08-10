@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.MenuItemCompat;
@@ -26,9 +28,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +52,7 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -67,6 +72,8 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -89,6 +96,8 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     private ShareActionProvider mShareActionProvider = null;
     private String currentUrl;
     private Context context;
+    private ArrayAdapter<String> listViewAdapter;
+    private boolean desktopFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +134,31 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         if (prefs.getBoolean("fullscreen_preference", false)) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        }
+
+        SharedPreferences.Editor editor = prefs.edit();
+        TelephonyManager connection = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        if (connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_EDGE ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_0 ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_A ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_B ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_1xRTT ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_IDEN ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_UMTS ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_GPRS ||
+                connection.getNetworkType() == TelephonyManager.NETWORK_TYPE_CDMA) {
+            editor.putBoolean("network_flag", true);
+            editor.putBoolean("prev_savedata", prefs.getBoolean("savedata_preference", false));
+            editor.putBoolean("prev_adblock", prefs.getBoolean("adblock_preference", false));
+            editor.putBoolean("savedata_preference", true);
+            editor.putBoolean("adblock_preference", true);
+            editor.apply();
+        }
+        else if (prefs.getBoolean("network_flag", false)) {
+            editor.putBoolean("network_flag", false);
+            editor.putBoolean("savedata_preference", prefs.getBoolean("prev_savedata", false));
+            editor.putBoolean("adblock_preference", prefs.getBoolean("prev_adblock", false));
+            editor.apply();
         }
 
         super.onCreate(savedInstanceState);
@@ -182,6 +216,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
         registerForContextMenu(webView);
 
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
         webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         webView.getSettings().setUserAgentString(prefs.getString("ua_preference", ""));
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -262,47 +297,43 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             }
         });
 
+        TextView textView = new TextView(context);
+        textView.setTextSize(20);
+        textView.setTextColor(getResources().getColor(R.color.BlackColor));
+        textView.setTypeface(Typeface.DEFAULT_BOLD);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView.setPadding(0, 15, 0, 15);
+        textView.setText("Bookmarks");
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.right_drawer);
+        mDrawerList.addHeaderView(textView);
 
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                String[] bookmarkTitles = loadArray("bookmark_titles", getApplicationContext());
-
-                // Set the adapter for the list view
-                mDrawerList.setAdapter(new ArrayAdapter<String>(getApplicationContext(),
-                        R.layout.drawer_list_item, bookmarkTitles));
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
+        ArrayList<String> bookmarks = new ArrayList<String>(Arrays.asList(loadArray("bookmark_titles")));
+        listViewAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                R.layout.drawer_list_item, bookmarks);
+        mDrawerList.setAdapter(listViewAdapter);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                CharSequence text[] = {"Do you really want to delete this bookmark?"};
+                showDialog("Remove", text, position);
+                return true;
+            }
+        });
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            String[] bookmarkUrls = loadArray("bookmark_urls", context);
+            String[] bookmarkUrls = loadArray("bookmark_urls");
             mDrawerLayout.closeDrawers();
 
             if (Build.VERSION.SDK_INT >= 21 && prefs.getBoolean("bookmark_preference", true)) {
-                Intent newWindow = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmarkUrls[position]), context, MainActivity.class);
+                Intent newWindow = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmarkUrls[position-1]), context, MainActivity.class);
 
                 newWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK |
                         Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS);
@@ -364,6 +395,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 " +
                     "(KHTML, like Gecko) Chrome/44.0.2403.133 Safari/537.36");
             webView.reload();
+            desktopFlag = true;
             return true;
         }
         else if (id == R.id.action_share) {
@@ -383,6 +415,24 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        // Save the state of the WebView
+        webView.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore the state of the WebView
+        webView.restoreState(savedInstanceState);
     }
 
     @Override
@@ -431,12 +481,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         super.onStop();
     }
 
-    public static boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
-
     private String checkInput(String text) {
         String url;
 
@@ -446,24 +490,11 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         else if (text.contains(".") && !text.contains(" "))
             url = "http://" + text;
         else {
-            url = prefs.getString("search_preference", "http://www.google.com/search?site=&oq=") +
+            url = prefs.getString("search_preference", "https://www.google.com/?gws_rd=ssl#q=") +
                     text.replace(" ", "+");
         }
 
         return url;
-    }
-
-    public static boolean openApp(Context context, String packageName) {
-        PackageManager manager = context.getPackageManager();
-        Intent i = manager.getLaunchIntentForPackage(packageName);
-
-        if (i == null) {
-            return false;
-            //throw new PackageManager.NameNotFoundException();
-        }
-        i.addCategory(Intent.CATEGORY_LAUNCHER);
-        context.startActivity(i);
-        return true;
     }
 
     public void addBookmark() {
@@ -488,9 +519,12 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // Add title and url to shared prefs
-                                addToArray("bookmark_titles", titleText.getText().toString(), getApplicationContext());
-                                addToArray("bookmark_urls", urlText.getText().toString(), getApplicationContext());
-
+                                addToArray("bookmark_titles", titleText.getText().toString());
+                                addToArray("bookmark_urls", urlText.getText().toString());
+                                ArrayList<String> bookmarks = new ArrayList<String>(Arrays.asList(loadArray("bookmark_titles")));
+                                listViewAdapter.clear();
+                                listViewAdapter.addAll(bookmarks);
+                                listViewAdapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(), "Added to bookmarks", Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -504,26 +538,71 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         alert.show();
     }
 
-    public String[] loadArray(String arrayName, Context mContext) {
+    public String[] loadArray(String arrayName) {
         int size = prefs.getInt(arrayName + "_size", 0);
+        Log.d("DEBUG", "SIZE: " + size);
         String array[] = new String[size];
-        for(int i=0;i<size;i++)
+        for(int i = 0; i < size; i++)
             array[i] = prefs.getString(arrayName + "_" + i, null);
         return array;
     }
 
-    public boolean addToArray(String arrayName, String newString, Context mContext) {
+    public boolean addToArray(String arrayName, String newString) {
         SharedPreferences.Editor editor = prefs.edit();
         int size = prefs.getInt(arrayName + "_size", 0);
         int newSize = size + 1;
         editor.putInt(arrayName + "_size", newSize);
-
-        String array[] = new String[newSize];
-        for(int i=0;i<size;i++)
-            array[i] = prefs.getString(arrayName + "_" + i, null);
         editor.putString(arrayName + "_" + size, newString);
 
         return editor.commit();
+    }
+
+    public void showDialog(String title, CharSequence[] items, final int position) {
+        final CharSequence[] fitems = items;
+        AlertDialog.Builder lmenu = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        final AlertDialog ad = lmenu.create();
+
+        lmenu.setTitle(title);
+        lmenu.setMessage(fitems[0]);
+        lmenu.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Deletes the entry in shared prefs
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.remove("bookmark_titles_" + position);
+                editor.remove("bookmark_urls_" + position);
+
+                int numBookmarks = prefs.getInt("bookmark_titles_size", 0);
+                if (position != numBookmarks - 1) {
+                    String curTitle = prefs.getString("bookmark_titles_" + numBookmarks, "");
+                    String curUrl = prefs.getString("bookmark_urls_" + numBookmarks, "");
+                    for (int i = numBookmarks; i > position; i--) {
+                        String prevTitle = prefs.getString("bookmark_titles_" + (i - 1), "");
+                        String prevUrl = prefs.getString("bookmark_urls_" + (i - 1), "");
+
+                        editor.putString("bookmark_titles_" + (i-1), curTitle);
+                        editor.putString("bookmark_urls_" + (i-1), curUrl);
+
+                        curTitle = prevTitle;
+                        curUrl = prevUrl;
+                    }
+                }
+                editor.putInt("bookmark_titles_size", numBookmarks - 1);
+                editor.putInt("bookmark_urls_size", numBookmarks - 1);
+                editor.apply();
+
+                ArrayList<String> bookmarks = new ArrayList<String>(Arrays.asList(loadArray("bookmark_titles")));
+                listViewAdapter.clear();
+                listViewAdapter.addAll(bookmarks);
+                listViewAdapter.notifyDataSetChanged();
+            }
+        });
+        lmenu.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ad.dismiss();
+            }
+        });
+        lmenu.show();
     }
 
     /**
@@ -597,6 +676,10 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         public void onPageFinished(WebView view, String url) {
             //Hide progress bar in action bar when page is finished loading
             mSwipeRefreshLayout.setRefreshing(false);
+            if (desktopFlag) {
+                desktopFlag = false;
+                webView.getSettings().setUserAgentString("");
+            }
         }
 
         @Override

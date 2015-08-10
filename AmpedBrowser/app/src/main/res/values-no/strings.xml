@@ -1,64 +1,72 @@
 <resources>
     <string name="app_name">"Amped Browser"</string>
+    <string name="drawer_open">"Åpen"</string>
+    <string name="drawer_close">"Stengt"</string>
 
     -- General settings strings
-    <string name="general_preferences">"General"</string>
-    <string name="advanced_preferences">"Advanced"</string>
-    <string name="other_preferences">"Other"</string>
+    <string name="general_preferences">"Generelt"</string>
+    <string name="advanced_preferences">"Avansert"</string>
+    <string name="other_preferences">"Andre"</string>
 
     -- Homepage preference strings
-    <string name="title_homepage_preference">"Set Homepage"</string>
-    <string name="summary_homepage_preference">"Set the browser's homepage"</string>
-    <string name="dialog_title_homepage_preference">"Homepage"</string>
-    <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
+    <string name="title_homepage_preference">"Set hjemmeside"</string>
+    <string name="summary_homepage_preference">"Sett leseren hjemmeside"</string>
+    <string name="dialog_title_homepage_preference">"Hjemmeside"</string>
+    <string name="dialog_message_homepage_preference">"Sett leseren hjemmeside"</string>
 
     -- Search engine preference strings
-    <string name="title_search_preference">"Choose Search Engine"</string>
-    <string name="dialog_title_search_preference">"Search Engines"</string>
+    <string name="title_search_preference">"Velg Søkemotor"</string>
+    <string name="dialog_title_search_preference">"Søkemotorer"</string>
 
     -- Theme preference strings
-    <string name="title_theme_preference">"Choose Theme"</string>
-    <string name="dialog_title_theme_preference">"Themes"</string>
+    <string name="title_theme_preference">"Velg tema"</string>
+    <string name="dialog_title_theme_preference">"Temaer"</string>
+
+    -- Bookmark preference strings
+    <string name="title_bookmark_preference">"Åpne bokmerker i et nytt vindu"</string>
 
     -- Fullscreen preference strings
-    <string name="title_fullscreen_preference">"Fullscreen mode"</string>
+    <string name="title_fullscreen_preference">"Skjul statuslinjen"</string>
 
     -- Save data preference strings
-    <string name="title_savedata_preference">"Save Data"</string>
-    <string name="summary_savedata_preference">"This saves data by preventing images from
-        loading"</string>
+    <string name="title_savedata_preference">"Lagre data"</string>
+    <string name="summary_savedata_preference">"Hindrer bilder fra lasting. Optimal når på trege nettverk som 2G."</string>
 
     -- Adblock preference strings
-    <string name="title_adblock_preference">"Remove Intrusive Ads"</string>
-    <string name="summary_adblock_preference">"This option removes many ads as well as improves
-        security by preventing JavaScript from running. This may cause some websites that rely
-        heavily on javascript to stop working."</string>
+    <string name="title_adblock_preference">"Deaktivere Javascript"</string>
+    <string name="summary_adblock_preference">"Dette valget fjerner mange annonser så vel som forbedrer sikkerheten ved å hindre Java fra å kjøre. Dette kan føre til at noen nettsteder som er avhengige tungt på javascript for å slutte å virke."</string>
+
+    -- User agent preference strings
+    <string name="title_ua_preference">"Custom user agent"</string>
+    <string name="summary_ua_preference">"Denne innstillingen trer i kraft når nettleseren startes på nytt. Ugyldige nettlesarar ignoreres."</string>
+    <string name="dialog_title_ua_preference">"Sette standard brukeragent"</string>
 
     -- Private Mode Preference strings
     <string name="title_private_preference">"Private Browsing"</string>
-    <string name="summary_private_preference">"This setting will reset your browsing instance and
-        permanently delete all browsing data at the end of each browsing session. The theme changes
-        to grey to indicate that this setting is enabled."</string>
+    <string name="summary_private_preference">"Dette vil tilbakestille nettleser forekomst og permanent slette alle nettleserdata på slutten av hver økt. Temaet endringer til grått for å indikere at denne innstillingen er aktivert."</string>
 
     -- Rate App Preference strings
-    <string name="title_rate_preference">"Rate this app!"</string>
-    <string name="summary_rate_preference">"If this app is useful to you, please take a moment and
-        rate it! Thanks!"</string>
+    <string name="title_rate_preference">"Rangere denne app!"</string>
+    <string name="summary_rate_preference">"Hvis dette programmet er nyttig for deg, kan du ta et øyeblikk og vurdere det! Takk!"</string>
 
     -- Feedback preference strings
-    <string name="title_feedback_preference">"Send feedback"</string>
-    <string name="email_subject">"Amped Browser Feedback"</string>
+    <string name="title_feedback_preference">"Gi tilbakemelding"</string>
+    <string name="email_subject">"Amped Browser Tilbakemelding"</string>
 
-    <string name="action_home">"Home"</string>
+    -- Dialog Preference Strings
+    <string name="title_dialog_preference">"Omtrent"</string>
+
+    <string name="action_home">"Hjem"</string>
     <string name="action_window">"New window"</string>
-    <string name="action_desktop">"Request desktop site"</string>
-    <string name="action_find">"Find in page"</string>
-    <string name="action_share">"Share link"</string>
-    <string name="action_settings">"Settings"</string>
+    <string name="action_bookmarks">"Legg til bokmerker"</string>
+    <string name="action_desktop">"Request desktop nettstedet"</string>
+    <string name="action_find">"Finn på side"</string>
+    <string name="action_share">"Del link"</string>
+    <string name="action_settings">"Innstillinger"</string>
 
     <string name="menu_refresh">"Refresh"</string>
 
-    <string name="hint">"Search or enter URL"</string>
-    <string name="go">"Go"</string>
+    <string name="hint">"Søke eller angi URL"</string>
+    <string name="go">"Gå"</string>
     <string name="default_url">"google.com"</string>
 </resources>

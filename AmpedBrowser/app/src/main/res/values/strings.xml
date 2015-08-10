@@ -26,27 +26,28 @@
     <string name="title_bookmark_preference">Open bookmarks in a new window</string>
 
     -- Fullscreen preference strings
-    <string name="title_fullscreen_preference">Fullscreen mode</string>
+    <string name="title_fullscreen_preference">Hide status bar</string>
 
     -- Save data preference strings
     <string name="title_savedata_preference">Save Data</string>
-    <string name="summary_savedata_preference">This saves data by preventing images from
-        loading</string>
+    <string name="summary_savedata_preference">Prevents images from
+        loading. Optimal when on slow networks such as 2G.</string>
 
     -- Adblock preference strings
-    <string name="title_adblock_preference">Remove Intrusive Ads</string>
+    <string name="title_adblock_preference">Disable JavaScript</string>
     <string name="summary_adblock_preference">This option removes many ads as well as improves
         security by preventing JavaScript from running. This may cause some websites that rely
         heavily on javascript to stop working.</string>
 
     -- User agent preference strings
     <string name="title_ua_preference">Custom user agent</string>
-    <string name="summary_ua_preference">This setting will take effect when the browser is restarted.</string>
+    <string name="summary_ua_preference">This setting will take effect when the browser is restarted.
+        Invalid user agents are ignored.</string>
     <string name="dialog_title_ua_preference">Set default user agent</string>
 
     -- Private Mode Preference strings
     <string name="title_private_preference">Private Browsing</string>
-    <string name="summary_private_preference">This setting will reset your browsing instance and
+    <string name="summary_private_preference">This will reset your browsing instance and
         permanently delete all browsing data at the end of each browsing session. The theme changes
         to grey to indicate that this setting is enabled.</string>
 
@@ -64,7 +65,7 @@
 
     <string name="action_home">Home</string>
     <string name="action_window">New window</string>
-    <string name="action_bookmarks">Add to bookmarks</string>
+    <string name="action_bookmarks">Add bookmark</string>
     <string name="action_desktop">Request desktop site</string>
     <string name="action_find">Find in page</string>
     <string name="action_share">Share link</string>

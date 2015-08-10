@@ -24,7 +24,8 @@
         android:singleLine="true"
         android:inputType="textUri"
         android:imeOptions="actionGo|flagNoExtractUi"
-        android:selectAllOnFocus="true"/>
+        android:selectAllOnFocus="true"
+        android:longClickable="true"/>
 
     <ImageButton
         android:id="@+id/go_forward"

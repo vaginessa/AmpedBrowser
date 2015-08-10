@@ -74,10 +74,10 @@ Version 1.3 Release 8/5/2015
   - Theme color options
   - Fullscreen option
 
-Version 1.4 Release 8/10/2015
-  - NEW: Bookmarks! Simple bookmark manager in a custom navigation drawer that can be swiped in from the right
-  - NEW: Find in page support
+Version 1.4 Release 8/09/2015
+  - NEW: Add bookmarks from the overflow menu! Swipe in from the right to view saved bookmarks. Long press a bookmark to delete it.
   - NEW: Option to define a custom user agent
+  - NEW: Automatically set to not load images or JavaScript if on 2G or worse to save valuable bandwidth
   - FIXED: Request desktop site did not work for many websites
   - FIXED: Reduced the sensitivity of the swipe to refresh action to prevent accidental page refreshes
   - Bug fixes and improvements

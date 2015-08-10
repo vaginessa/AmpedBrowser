@@ -1,64 +1,72 @@
 <resources>
-    <string name="app_name">"Amped Browser"</string>
+    <string name="app_name">"Navegador Amped"</string>
+    <string name="drawer_open">"Aberto"</string>
+    <string name="drawer_close">"Fechadas"</string>
 
     -- General settings strings
-    <string name="general_preferences">"General"</string>
-    <string name="advanced_preferences">"Advanced"</string>
-    <string name="other_preferences">"Other"</string>
+    <string name="general_preferences">"Geral"</string>
+    <string name="advanced_preferences">"Avançado"</string>
+    <string name="other_preferences">"De outros"</string>
 
     -- Homepage preference strings
     <string name="title_homepage_preference">"Set Homepage"</string>
-    <string name="summary_homepage_preference">"Set the browser's homepage"</string>
-    <string name="dialog_title_homepage_preference">"Homepage"</string>
-    <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
+    <string name="summary_homepage_preference">"Definir a página inicial do navegador"</string>
+    <string name="dialog_title_homepage_preference">"Pagina inicial"</string>
+    <string name="dialog_message_homepage_preference">"Definir a página inicial do navegador"</string>
 
     -- Search engine preference strings
-    <string name="title_search_preference">"Choose Search Engine"</string>
-    <string name="dialog_title_search_preference">"Search Engines"</string>
+    <string name="title_search_preference">"Escolha Search Engine"</string>
+    <string name="dialog_title_search_preference">"Ferramentas de pesquisa"</string>
 
     -- Theme preference strings
-    <string name="title_theme_preference">"Choose Theme"</string>
-    <string name="dialog_title_theme_preference">"Themes"</string>
+    <string name="title_theme_preference">"Escolha Tema"</string>
+    <string name="dialog_title_theme_preference">"Temas"</string>
+
+    -- Bookmark preference strings
+    <string name="title_bookmark_preference">"Bookmarks abertas em uma nova janela"</string>
 
     -- Fullscreen preference strings
-    <string name="title_fullscreen_preference">"Fullscreen mode"</string>
+    <string name="title_fullscreen_preference">"Ocultar barra de status"</string>
 
     -- Save data preference strings
-    <string name="title_savedata_preference">"Save Data"</string>
-    <string name="summary_savedata_preference">"This saves data by preventing images from
-        loading"</string>
+    <string name="title_savedata_preference">"Guardar dados"</string>
+    <string name="summary_savedata_preference">"Previne imagens de carregamento. Optimal quando em redes lentas, como 2G."</string>
 
     -- Adblock preference strings
-    <string name="title_adblock_preference">"Remove Intrusive Ads"</string>
-    <string name="summary_adblock_preference">"This option removes many ads as well as improves
-        security by preventing JavaScript from running. This may cause some websites that rely
-        heavily on javascript to stop working."</string>
+    <string name="title_adblock_preference">"Desativar JavaScript"</string>
+    <string name="summary_adblock_preference">"Esta opção remove muitos anúncios, bem como melhora a segurança, impedindo a execução de JavaScript. Isso pode fazer com que alguns sites que dependem fortemente de javascript para parar de trabalhar."</string>
+
+    -- User agent preference strings
+    <string name="title_ua_preference">"Agente de usuário personalizada"</string>
+    <string name="summary_ua_preference">"Esta definição será aplicada quando o navegador for reiniciado. Agentes de utilizador inválidas são ignoradas."</string>
+    <string name="dialog_title_ua_preference">"Definir agente do usuário padrão"</string>
 
     -- Private Mode Preference strings
-    <string name="title_private_preference">"Private Browsing"</string>
-    <string name="summary_private_preference">"This setting will reset your browsing instance and
-        permanently delete all browsing data at the end of each browsing session. The theme changes
-        to grey to indicate that this setting is enabled."</string>
+    <string name="title_private_preference">"Navegação privada"</string>
+    <string name="summary_private_preference">"Isso irá redefinir sua instância de navegação e eliminar permanentemente todos os dados de navegação no final de cada sessão de navegação. As mudanças temáticos para cinza para indicar que essa configuração está habilitada."</string>
 
     -- Rate App Preference strings
-    <string name="title_rate_preference">"Rate this app!"</string>
-    <string name="summary_rate_preference">"If this app is useful to you, please take a moment and
-        rate it! Thanks!"</string>
+    <string name="title_rate_preference">"Avalie este aplicativo!"</string>
+    <string name="summary_rate_preference">"Se este aplicativo é útil para você, por favor, tome um momento e avaliá-lo! Obrigado!"</string>
 
     -- Feedback preference strings
-    <string name="title_feedback_preference">"Send feedback"</string>
-    <string name="email_subject">"Amped Browser Feedback"</string>
+    <string name="title_feedback_preference">"Enviar comentários"</string>
+    <string name="email_subject">"Amped Navegador feedback"</string>
 
-    <string name="action_home">"Home"</string>
-    <string name="action_window">"New window"</string>
-    <string name="action_desktop">"Request desktop site"</string>
-    <string name="action_find">"Find in page"</string>
-    <string name="action_share">"Share link"</string>
-    <string name="action_settings">"Settings"</string>
+    -- Dialog Preference Strings
+    <string name="title_dialog_preference">"Cerca de"</string>
 
-    <string name="menu_refresh">"Refresh"</string>
+    <string name="action_home">"Casa"</string>
+    <string name="action_window">"Nova janela"</string>
+    <string name="action_bookmarks">"Adicionar aos favoritos"</string>
+    <string name="action_desktop">"O site em desktop pedido"</string>
+    <string name="action_find">"Encontrar na página"</string>
+    <string name="action_share">"Compartilhar link"</string>
+    <string name="action_settings">"Definições"</string>
 
-    <string name="hint">"Search or enter URL"</string>
-    <string name="go">"Go"</string>
-    <string name="default_url">"google.com"</string>
+    <string name="menu_refresh">"Refrescar"</string>
+
+    <string name="hint">"Pesquisar ou digitar URL"</string>
+    <string name="go">"Ir"</string>
+    <string name="default_url">"Google com"</string>
 </resources>

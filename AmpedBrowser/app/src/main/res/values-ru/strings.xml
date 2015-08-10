@@ -1,64 +1,72 @@
 <resources>
-    <string name="app_name">"Amped Browser"</string>
+    <string name="app_name">"Amped Браузер"</string>
+    <string name="drawer_open">"Открыто"</string>
+    <string name="drawer_close">"Закрыто"</string>
 
     -- General settings strings
-    <string name="general_preferences">"General"</string>
-    <string name="advanced_preferences">"Advanced"</string>
-    <string name="other_preferences">"Other"</string>
+    <string name="general_preferences">"Генеральная"</string>
+    <string name="advanced_preferences">"Передовой"</string>
+    <string name="other_preferences">"Другой"</string>
 
     -- Homepage preference strings
-    <string name="title_homepage_preference">"Set Homepage"</string>
-    <string name="summary_homepage_preference">"Set the browser's homepage"</string>
-    <string name="dialog_title_homepage_preference">"Homepage"</string>
-    <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
+    <string name="title_homepage_preference">"Набор стартовой"</string>
+    <string name="summary_homepage_preference">"Установите домашнюю браузера"</string>
+    <string name="dialog_title_homepage_preference">"Домашняя страница"</string>
+    <string name="dialog_message_homepage_preference">"Установите домашнюю браузера"</string>
 
     -- Search engine preference strings
-    <string name="title_search_preference">"Choose Search Engine"</string>
-    <string name="dialog_title_search_preference">"Search Engines"</string>
+    <string name="title_search_preference">"Выберите поисковую систему"</string>
+    <string name="dialog_title_search_preference">"Поисковые системы"</string>
 
     -- Theme preference strings
-    <string name="title_theme_preference">"Choose Theme"</string>
-    <string name="dialog_title_theme_preference">"Themes"</string>
+    <string name="title_theme_preference">"Выбрать тему"</string>
+    <string name="dialog_title_theme_preference">"Темы"</string>
+
+    -- Bookmark preference strings
+    <string name="title_bookmark_preference">"Открытые закладки в новом окне"</string>
 
     -- Fullscreen preference strings
-    <string name="title_fullscreen_preference">"Fullscreen mode"</string>
+    <string name="title_fullscreen_preference">"Строка состояния Свернуть"</string>
 
     -- Save data preference strings
-    <string name="title_savedata_preference">"Save Data"</string>
-    <string name="summary_savedata_preference">"This saves data by preventing images from
-        loading"</string>
+    <string name="title_savedata_preference">"Сохранить данные"</string>
+    <string name="summary_savedata_preference">"Предотвращает изображения от загрузки. Оптимальное когда на медленных сетях, таких как 2G."</string>
 
     -- Adblock preference strings
-    <string name="title_adblock_preference">"Remove Intrusive Ads"</string>
-    <string name="summary_adblock_preference">"This option removes many ads as well as improves
-        security by preventing JavaScript from running. This may cause some websites that rely
-        heavily on javascript to stop working."</string>
+    <string name="title_adblock_preference">"Отключить наличие"</string>
+    <string name="summary_adblock_preference">"Эта опция удаляет много объявлений, а также повышает безопасность, предотвращая наличие запуск. Это может вызвать некоторые сайты, которые в значительной степени полагаются на JavaScript, чтобы перестать работать."</string>
+
+    -- User agent preference strings
+    <string name="title_ua_preference">"Пользовательские агент пользователя"</string>
+    <string name="summary_ua_preference">"Этот параметр вступит в силу, когда перезапуска браузера. Неверно ПА игнорируются."</string>
+    <string name="dialog_title_ua_preference">"Установите агент пользователя по умолчанию"</string>
 
     -- Private Mode Preference strings
-    <string name="title_private_preference">"Private Browsing"</string>
-    <string name="summary_private_preference">"This setting will reset your browsing instance and
-        permanently delete all browsing data at the end of each browsing session. The theme changes
-        to grey to indicate that this setting is enabled."</string>
+    <string name="title_private_preference">"Частного просмотра"</string>
+    <string name="summary_private_preference">"Это сбросит ваш экземпляр просмотра и удаления всех данных о просмотренных страницах в конце каждого сеанса просмотра. Изменения тема к серому, чтобы указать, что этот параметр включен."</string>
 
     -- Rate App Preference strings
-    <string name="title_rate_preference">"Rate this app!"</string>
-    <string name="summary_rate_preference">"If this app is useful to you, please take a moment and
-        rate it! Thanks!"</string>
+    <string name="title_rate_preference">"Оцените это приложение!"</string>
+    <string name="summary_rate_preference">"Если это приложение полезно для вас, пожалуйста, найдите время, и оценить его! Спасибо!"</string>
 
     -- Feedback preference strings
-    <string name="title_feedback_preference">"Send feedback"</string>
-    <string name="email_subject">"Amped Browser Feedback"</string>
+    <string name="title_feedback_preference">"Отправить отзыв"</string>
+    <string name="email_subject">"Amped Браузер Обратная связь"</string>
 
-    <string name="action_home">"Home"</string>
-    <string name="action_window">"New window"</string>
-    <string name="action_desktop">"Request desktop site"</string>
-    <string name="action_find">"Find in page"</string>
-    <string name="action_share">"Share link"</string>
-    <string name="action_settings">"Settings"</string>
+    -- Dialog Preference Strings
+    <string name="title_dialog_preference">"Около"</string>
 
-    <string name="menu_refresh">"Refresh"</string>
+    <string name="action_home">"Главная"</string>
+    <string name="action_window">"Новое окно"</string>
+    <string name="action_bookmarks">"Добавить в закладки"</string>
+    <string name="action_desktop">"Запрос рабочего стола на сайте"</string>
+    <string name="action_find">"Найти на странице"</string>
+    <string name="action_share">"Поделиться ссылкой"</string>
+    <string name="action_settings">"Настройки"</string>
 
-    <string name="hint">"Search or enter URL"</string>
-    <string name="go">"Go"</string>
+    <string name="menu_refresh">"Обновление"</string>
+
+    <string name="hint">"Поиск или введите URL"</string>
+    <string name="go">"Идти"</string>
     <string name="default_url">"google.com"</string>
 </resources>

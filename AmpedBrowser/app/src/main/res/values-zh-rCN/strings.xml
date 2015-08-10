@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">"功放浏览器"</string>
+    <string name="drawer_open">"开放"</string>
+    <string name="drawer_close">"关闭"</string>
+
+    -- General settings strings
+    <string name="general_preferences">"一般"</string>
+    <string name="advanced_preferences">"先进"</string>
+    <string name="other_preferences">"其他"</string>
+
+    -- Homepage preference strings
+    <string name="title_homepage_preference">"设为首页"</string>
+    <string name="summary_homepage_preference">"设置浏览器的主页"</string>
+    <string name="dialog_title_homepage_preference">"主页"</string>
+    <string name="dialog_message_homepage_preference">"设置浏览器的主页"</string>
+
+    -- Search engine preference strings
+    <string name="title_search_preference">"选择搜索引擎"</string>
+    <string name="dialog_title_search_preference">"搜索引擎"</string>
+
+    -- Theme preference strings
+    <string name="title_theme_preference">"选择主题"</string>
+    <string name="dialog_title_theme_preference">"主题"</string>
+
+    -- Bookmark preference strings
+    <string name="title_bookmark_preference">"在新窗口中打开书签"</string>
+
+    -- Fullscreen preference strings
+    <string name="title_fullscreen_preference">"隐藏状态栏"</string>
+
+    -- Save data preference strings
+    <string name="title_savedata_preference">"保存数据"</string>
+    <string name="summary_savedata_preference">"防止加载图像。在较慢的网络，如2G最佳时。"</string>
+
+    -- Adblock preference strings
+    <string name="title_adblock_preference">"禁用javascript"</string>
+    <string name="summary_adblock_preference">"此选项删除许多广告，以及防止JavaScript的运行提高了安全性。这可能会导致一些严重依赖于JavaScript停止工作网站。"</string>
+
+    -- User agent preference strings
+    <string name="title_ua_preference">"自定义用户代理"</string>
+    <string name="summary_ua_preference">"此设置生效时，浏览器将重新启动。无效的用户代理将被忽略。"</string>
+    <string name="dialog_title_ua_preference">"设置默认的用户代理"</string>
+
+    -- Private Mode Preference strings
+    <string name="title_private_preference">"隐私浏览"</string>
+    <string name="summary_private_preference">"这将重置你的浏览实例，并在每次浏览会话结束永久删除所有浏览数据。主题变为灰色，表明该设置已启用。"</string>
+
+    -- Rate App Preference strings
+    <string name="title_rate_preference">"评价这个应用程序！"</string>
+    <string name="summary_rate_preference">"如果这个程序是对你有用，请花点时间评分！谢谢！"</string>
+
+    -- Feedback preference strings
+    <string name="title_feedback_preference">"发送反馈"</string>
+    <string name="email_subject">"功放浏览器反馈"</string>
+
+    -- Dialog Preference Strings
+    <string name="title_dialog_preference">"大约"</string>
+
+    <string name="action_home">"家"</string>
+    <string name="action_window">"新窗口"</string>
+    <string name="action_bookmarks">"添加到书签"</string>
+    <string name="action_desktop">"请求桌面版网站"</string>
+    <string name="action_find">"在网页上查找"</string>
+    <string name="action_share">"分享链接"</string>
+    <string name="action_settings">"设置"</string>
+
+    <string name="menu_refresh">"刷新"</string>
+
+    <string name="hint">"搜索或输入网址"</string>
+    <string name="go">"走"</string>
+    <string name="default_url">"google.com"</string>
+</resources>

@@ -12,8 +12,8 @@
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:nestedScrollingEnabled="true">
 
             <jlogier.example.com.ampedbrowser.MyWebView
@@ -28,12 +28,12 @@
 
     <ListView
         android:id="@+id/right_drawer"
-        android:layout_width="fill_parent"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_gravity="end"
         android:layout_marginLeft="-65dp"
         android:choiceMode="singleChoice"
-        android:divider="@null"
-        android:dividerHeight="10dp"/>
+        android:background="#ffeeeeee"
+        android:fontFamily="sans-serif"/>
 </android.support.v4.widget.DrawerLayout>

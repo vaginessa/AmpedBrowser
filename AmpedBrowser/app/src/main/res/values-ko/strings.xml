@@ -1,64 +1,72 @@
 <resources>
-    <string name="app_name">"Amped Browser"</string>
+    <string name="app_name">"겟앰프드 브라우저"</string>
+    <string name="drawer_open">"열린"</string>
+    <string name="drawer_close">"닫은"</string>
 
     -- General settings strings
-    <string name="general_preferences">"General"</string>
-    <string name="advanced_preferences">"Advanced"</string>
-    <string name="other_preferences">"Other"</string>
+    <string name="general_preferences">"일반"</string>
+    <string name="advanced_preferences">"고급"</string>
+    <string name="other_preferences">"다른"</string>
 
     -- Homepage preference strings
-    <string name="title_homepage_preference">"Set Homepage"</string>
-    <string name="summary_homepage_preference">"Set the browser's homepage"</string>
-    <string name="dialog_title_homepage_preference">"Homepage"</string>
-    <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
+    <string name="title_homepage_preference">"설정 홈페이지"</string>
+    <string name="summary_homepage_preference">"브라우저의 홈 페이지 설정"</string>
+    <string name="dialog_title_homepage_preference">"홈페이지"</string>
+    <string name="dialog_message_homepage_preference">"브라우저의 홈 페이지 설정"</string>
 
     -- Search engine preference strings
-    <string name="title_search_preference">"Choose Search Engine"</string>
-    <string name="dialog_title_search_preference">"Search Engines"</string>
+    <string name="title_search_preference">"검색 엔진을 선택"</string>
+    <string name="dialog_title_search_preference">"검색 엔진"</string>
 
     -- Theme preference strings
-    <string name="title_theme_preference">"Choose Theme"</string>
-    <string name="dialog_title_theme_preference">"Themes"</string>
+    <string name="title_theme_preference">"테마를 선택"</string>
+    <string name="dialog_title_theme_preference">"테마"</string>
+
+    -- Bookmark preference strings
+    <string name="title_bookmark_preference">"새 창에서 열기 북마크"</string>
 
     -- Fullscreen preference strings
-    <string name="title_fullscreen_preference">"Fullscreen mode"</string>
+    <string name="title_fullscreen_preference">"숨기기 상태 표시 줄"</string>
 
     -- Save data preference strings
-    <string name="title_savedata_preference">"Save Data"</string>
-    <string name="summary_savedata_preference">"This saves data by preventing images from
-        loading"</string>
+    <string name="title_savedata_preference">"데이터 저장"</string>
+    <string name="summary_savedata_preference">"로딩 이미지를 방지합니다. 이러한 2G 느린 네트워크에서 때 최적."</string>
 
     -- Adblock preference strings
-    <string name="title_adblock_preference">"Remove Intrusive Ads"</string>
-    <string name="summary_adblock_preference">"This option removes many ads as well as improves
-        security by preventing JavaScript from running. This may cause some websites that rely
-        heavily on javascript to stop working."</string>
+    <string name="title_adblock_preference">"자바 스크립트를 사용하지 않도록 설정"</string>
+    <string name="summary_adblock_preference">"이 옵션은 많은 광고를 제거뿐만 아니라 실행에서 JavaScript를 방지하여 보안을 향상시킵니다. 이 작업을 중지 자바 스크립트에 크게 의존하는 일부 웹 사이트의 원인이 될 수 있습니다."</string>
+
+    -- User agent preference strings
+    <string name="title_ua_preference">"사용자 정의 사용자 에이전트"</string>
+    <string name="summary_ua_preference">"브라우저를 다시 시작하면이 설정이 적용됩니다. 잘못된 사용자 에이전트는 무시됩니다."</string>
+    <string name="dialog_title_ua_preference">"설정 기본 사용자 에이전트"</string>
 
     -- Private Mode Preference strings
-    <string name="title_private_preference">"Private Browsing"</string>
-    <string name="summary_private_preference">"This setting will reset your browsing instance and
-        permanently delete all browsing data at the end of each browsing session. The theme changes
-        to grey to indicate that this setting is enabled."</string>
+    <string name="title_private_preference">"개인 정보 보호 브라우징"</string>
+    <string name="summary_private_preference">"이것은 당신의 검색 인스턴스를 재설정하고 영구적으로 각 검색 세션의 끝에서 모든 인터넷 사용 정보를 삭제합니다. 테마 변경이 설정이 활성화되어 있음을 나타 내기 위해 회색."</string>
 
     -- Rate App Preference strings
-    <string name="title_rate_preference">"Rate this app!"</string>
-    <string name="summary_rate_preference">"If this app is useful to you, please take a moment and
-        rate it! Thanks!"</string>
+    <string name="title_rate_preference">"이 응용 프로그램을 평가하기!"</string>
+    <string name="summary_rate_preference">"이 응용 프로그램은 당신에게 유용 경우, 잠시 시간을내어 그것을 평가하십시오! 감사!"</string>
 
     -- Feedback preference strings
-    <string name="title_feedback_preference">"Send feedback"</string>
-    <string name="email_subject">"Amped Browser Feedback"</string>
+    <string name="title_feedback_preference">"피드백을 보내다"</string>
+    <string name="email_subject">"겟앰프드 브라우저 의견"</string>
 
-    <string name="action_home">"Home"</string>
-    <string name="action_window">"New window"</string>
-    <string name="action_desktop">"Request desktop site"</string>
-    <string name="action_find">"Find in page"</string>
-    <string name="action_share">"Share link"</string>
-    <string name="action_settings">"Settings"</string>
+    -- Dialog Preference Strings
+    <string name="title_dialog_preference">"약"</string>
 
-    <string name="menu_refresh">"Refresh"</string>
+    <string name="action_home">"집"</string>
+    <string name="action_window">"새 창"</string>
+    <string name="action_bookmarks">"즐겨 찾기에 추가"</string>
+    <string name="action_desktop">"요청 데스크톱 사이트"</string>
+    <string name="action_find">"페이지에서 찾기"</string>
+    <string name="action_share">"공유 링크"</string>
+    <string name="action_settings">"설정"</string>
 
-    <string name="hint">"Search or enter URL"</string>
-    <string name="go">"Go"</string>
+    <string name="menu_refresh">"새로 고침"</string>
+
+    <string name="hint">"검색 또는 URL을 입력"</string>
+    <string name="go">"가기"</string>
     <string name="default_url">"google.com"</string>
 </resources>

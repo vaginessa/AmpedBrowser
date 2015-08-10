@@ -18,7 +18,7 @@
             android:dialogTitle="@string/dialog_title_search_preference"
             android:entries="@array/searchEngines"
             android:entryValues="@array/searchEnginesValues"
-            android:defaultValue="www.google.com" />
+            android:defaultValue="https://www.google.com/?gws_rd=ssl#q=" />
 
         <ListPreference
             android:key="theme_preference"
@@ -32,7 +32,7 @@
             tools:targetApi="21"
             android:key="bookmark_preference"
             android:title="@string/title_bookmark_preference"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="fullscreen_preference"

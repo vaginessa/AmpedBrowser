@@ -1,58 +1,79 @@
 <resources>
-    <string name="app_name">"متصفح Amped"</string>
+    <string name="app_name">"Amped Browser"</string>
+    <string name="drawer_open">"Open"</string>
+    <string name="drawer_close">"Closed"</string>
 
     -- General settings strings
-    <string name="general_preferences">"عام"</string>
-    <string name="advanced_preferences">"متقدم"</string>
-    <string name="other_preferences">"آخر"</string>
+    <string name="general_preferences">"General"</string>
+    <string name="advanced_preferences">"Advanced"</string>
+    <string name="other_preferences">"Other"</string>
 
     -- Homepage preference strings
-    <string name="title_homepage_preference">"تعيين الصفحة الرئيسية"</string>
-    <string name="summary_homepage_preference">"تعيين الصفحة الرئيسية للمتصفح"</string>
-    <string name="dialog_title_homepage_preference">"الصفحة الرئيسية"</string>
-    <string name="dialog_message_homepage_preference">"تعيين الصفحة الرئيسية للمتصفح"</string>
+    <string name="title_homepage_preference">"Set Homepage"</string>
+    <string name="summary_homepage_preference">"Set the browser's homepage"</string>
+    <string name="dialog_title_homepage_preference">"Homepage"</string>
+    <string name="dialog_message_homepage_preference">"Set the browser's homepage"</string>
 
     -- Search engine preference strings
-    <string name="title_search_preference">"اختيار محرك البحث"</string>
-    <string name="dialog_title_search_preference">"محركات البحث"</string>
+    <string name="title_search_preference">"Choose Search Engine"</string>
+    <string name="dialog_title_search_preference">"Search Engines"</string>
 
     -- Theme preference strings
-    <string name="title_theme_preference">"اختيار موضوع"</string>
-    <string name="dialog_title_theme_preference">"الموضوعات"</string>
+    <string name="title_theme_preference">"Choose Theme"</string>
+    <string name="dialog_title_theme_preference">"Themes"</string>
+
+    -- Bookmark preference strings
+    <string name="title_bookmark_preference">"Open bookmarks in a new window"</string>
 
     -- Fullscreen preference strings
-    <string name="title_fullscreen_preference">"وضع ملء الشاشة"</string>
+    <string name="title_fullscreen_preference">"Hide status bar"</string>
 
     -- Save data preference strings
-    <string name="title_savedata_preference">"احفظ البيانات"</string>
-    <string name="summary_savedata_preference">"وهذا يوفر البيانات عن طريق منع الصور من التحميل"</string>
+    <string name="title_savedata_preference">"Save Data"</string>
+    <string name="summary_savedata_preference">"Prevents images from
+        loading. Optimal when on slow networks such as 2G."</string>
 
     -- Adblock preference strings
-    <string name="title_adblock_preference">"إزالة التطفل الإعلانات"</string>
-    <string name="summary_adblock_preference">"هذا الخيار يزيل العديد من الاعلانات وكذلك تحسن الوضع الأمني ​​من خلال منع جافا سكريبت من التشغيل. قد يسبب هذا بعض المواقع التي تعتمد اعتمادا كبيرا على جافا سكريبت للتوقف عن العمل."</string>
+    <string name="title_adblock_preference">"Disable JavaScript"</string>
+    <string name="summary_adblock_preference">"This option removes many ads as well as improves
+        security by preventing JavaScript from running. This may cause some websites that rely
+        heavily on javascript to stop working."</string>
+
+    -- User agent preference strings
+    <string name="title_ua_preference">"Custom user agent"</string>
+    <string name="summary_ua_preference">"This setting will take effect when the browser is restarted.
+        Invalid user agents are ignored."</string>
+    <string name="dialog_title_ua_preference">"Set default user agent"</string>
 
     -- Private Mode Preference strings
-    <string name="title_private_preference">"تصفح خاص"</string>
-    <string name="summary_private_preference">"وهذا الإعداد إعادة المثال التصفح الخاص بك وحذف جميع بيانات التصفح بشكل دائم في نهاية كل جلسة التصفح. التغييرات موضوع للرمادي للإشارة إلى أن يتم تمكين هذا الإعداد."</string>
+    <string name="title_private_preference">"Private Browsing"</string>
+    <string name="summary_private_preference">"This will reset your browsing instance and
+        permanently delete all browsing data at the end of each browsing session. The theme changes
+        to grey to indicate that this setting is enabled."</string>
 
     -- Rate App Preference strings
-    <string name="title_rate_preference">"قيم هذا التطبيق!"</string>
-    <string name="summary_rate_preference">"إذا كان هذا التطبيق هو مفيد لكم، يرجى ان نتوقف لحظة ومعدل ذلك! شكر!"</string>
+    <string name="title_rate_preference">"Rate this app!"</string>
+    <string name="summary_rate_preference">"If this app is useful to you, please take a moment and
+        rate it! Thanks!"</string>
 
     -- Feedback preference strings
-    <string name="title_feedback_preference">"إرسال الملاحظات"</string>
-    <string name="email_subject">"Amped متصفح ملاحظات"</string>
+    <string name="title_feedback_preference">"Send feedback"</string>
+    <string name="email_subject">"Amped Browser Feedback"</string>
 
-    <string name="action_home">"الصفحة الرئيسية"</string>
-    <string name="action_window">"نافذة جديدة"</string>
-    <string name="action_desktop">"طلب موقع سطح المكتب"</string>
-    <string name="action_find">"البحث في الصفحة"</string>
-    <string name="action_share">"رابط المشاركة"</string>
-    <string name="action_settings">"إعدادات"</string>
+    -- Dialog Preference Strings
+    <string name="title_dialog_preference">"About"</string>
 
-    <string name="menu_refresh">"تحديث"</string>
+    <string name="action_home">"Home"</string>
+    <string name="action_window">"New window"</string>
+    <string name="action_bookmarks">"Add bookmark"</string>
+    <string name="action_desktop">"Request desktop site"</string>
+    <string name="action_find">"Find in page"</string>
+    <string name="action_share">"Share link"</string>
+    <string name="action_settings">"Settings"</string>
 
-    <string name="hint">"بحث أو إدخال URL"</string>
-    <string name="go">"اذهب"</string>
+    <string name="menu_refresh">"Refresh"</string>
+
+    <string name="hint">"Search or enter URL"</string>
+    <string name="go">"Go"</string>
     <string name="default_url">"google.com"</string>
 </resources>
