@@ -341,7 +341,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 startActivity(newWindow);
             }
             else
-                webView.loadUrl(bookmarkUrls[position]);
+                webView.loadUrl(bookmarkUrls[position-1]);
         }
     }
 

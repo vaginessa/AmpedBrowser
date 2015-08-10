@@ -81,3 +81,13 @@ Version 1.4 Release 8/09/2015
   - FIXED: Request desktop site did not work for many websites
   - FIXED: Reduced the sensitivity of the swipe to refresh action to prevent accidental page refreshes
   - Bug fixes and improvements
+
+Version 1.4.1 Maintenance 8/10/2015
+  - FIXED: Bookmark related bug
+  - Updated "About" section to include a changelog
+
+Version 1.5 Release
+  - NEW: Find in page support
+  - NEW: Geolocation support for websites that want to access your location (can be turned off)
+  - NEW: Keep screen from turning off
+  - Bug fixes and other improvements
