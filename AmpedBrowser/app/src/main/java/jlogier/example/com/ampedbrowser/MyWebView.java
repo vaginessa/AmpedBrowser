@@ -10,13 +10,16 @@ import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.webkit.WebView;
+import android.widget.AbsListView;
 import android.widget.Toast;
 
 /**
  * Created by Josh on 8/5/2015.
  */
 public class MyWebView extends WebView {
+
     private static final int ID_SAVEIMAGE = 1;
     private static final int ID_VIEWIMAGE = 2;
     private static final int ID_OPENLINK = 3;
@@ -103,5 +106,20 @@ public class MyWebView extends WebView {
             menu.add(0, ID_COPYLINK, 0, "Copy link URL").setOnMenuItemClickListener(handler);
             menu.add(0, ID_SHARELINK, 0, "Share link URL").setOnMenuItemClickListener(handler);
         }
+    }
+
+    @Override
+    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+        if (clampedX || clampedY) {
+            // Not scrolling, enable swipe to refresh
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+            // Disable swipe to refresh
+        }
+        return true;
     }
 }

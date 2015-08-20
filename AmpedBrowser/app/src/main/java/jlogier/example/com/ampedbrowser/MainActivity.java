@@ -59,6 +59,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -90,6 +91,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     private ActionBar mActionBar;
     private MyWebView webView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ScrollView mScrollView;
     private boolean temp;
     private String theme = "default";
     private boolean screentoggle;
@@ -104,7 +106,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         context = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         temp = prefs.getBoolean("private_preference", false);
-        screentoggle = prefs.getBoolean("fullscreen_preference", false);
+        screentoggle = prefs.getBoolean("fullscreen_preference", true);
         theme = prefs.getString("theme_preference", "default");
         if (temp)
             setTheme(R.style.AppTheme_Private);
@@ -164,7 +166,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         super.onCreate(savedInstanceState);
 
         // Sets the action bar as an overlay to prevent the view from "jumping" when it is shown or hidden
-        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        //supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_main);
 
         mActionBar = getSupportActionBar();
@@ -172,16 +174,16 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         // Used to get actionbar size
         final TypedValue typed_value = new TypedValue();
         getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+        final float actionBarHeight = TypedValue.complexToDimensionPixelSize(typed_value.data,getResources().getDisplayMetrics());
 
         mActionBar.setCustomView(R.layout.actionbar_layout);
-        mActionBar.setHideOnContentScrollEnabled(true);
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(false);
-        mActionBar.setHomeButtonEnabled(true);
+        mActionBar.setHomeButtonEnabled(false);
 
         // Retrieve the SwipeRefreshLayout and ListView instances
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId) + 50);
+        mSwipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.swipe_container);
+        //mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId) - 50);
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
         mSwipeRefreshLayout.setColorScheme(
@@ -198,18 +200,13 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
 		/* Initializing and loading url in WebView */
         webView = (MyWebView)findViewById(R.id.webView);
-        webView.setOnTouchListener(new View.OnTouchListener() {
+        /*webView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                if (action == MotionEvent.ACTION_SCROLL || action == MotionEvent.ACTION_POINTER_2_DOWN) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                }
-
                 v.onTouchEvent(event);
                 return true;
             }
-        });
+        });*/
 
         webView.setWebViewClient(new MyWebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
@@ -297,17 +294,25 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             }
         });
 
-        TextView textView = new TextView(context);
-        textView.setTextSize(20);
-        textView.setTextColor(getResources().getColor(R.color.BlackColor));
-        textView.setTypeface(Typeface.DEFAULT_BOLD);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setPadding(0, 15, 0, 15);
-        textView.setText("Bookmarks");
+        TextView header = new TextView(context);
+        header.setTextSize(20);
+        header.setTextColor(getResources().getColor(R.color.BlackColor));
+        header.setTypeface(Typeface.DEFAULT_BOLD);
+        header.setGravity(Gravity.CENTER_HORIZONTAL);
+        header.setPadding(0, 15, 0, 15);
+        header.setText("Bookmarks");
+
+        TextView footer = new TextView(context);
+        footer.setTextSize(12);
+        footer.setTextColor(getResources().getColor(R.color.BlackColor));
+        footer.setGravity(Gravity.CENTER_HORIZONTAL);
+        footer.setText("** Press and hold a bookmark to delete **");
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.right_drawer);
-        mDrawerList.addHeaderView(textView);
+        mDrawerList.addHeaderView(header);
+        mDrawerList.addFooterView(footer);
 
         ArrayList<String> bookmarks = new ArrayList<String>(Arrays.asList(loadArray("bookmark_titles")));
         listViewAdapter = new ArrayAdapter<String>(getApplicationContext(),
@@ -568,14 +573,14 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             public void onClick(DialogInterface dialog, int id) {
                 // Deletes the entry in shared prefs
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.remove("bookmark_titles_" + position);
-                editor.remove("bookmark_urls_" + position);
+                editor.remove("bookmark_titles_" + (position-1));
+                editor.remove("bookmark_urls_" + (position-1));
 
                 int numBookmarks = prefs.getInt("bookmark_titles_size", 0);
-                if (position != numBookmarks - 1) {
+                if (position != numBookmarks) {
                     String curTitle = prefs.getString("bookmark_titles_" + numBookmarks, "");
                     String curUrl = prefs.getString("bookmark_urls_" + numBookmarks, "");
-                    for (int i = numBookmarks; i > position; i--) {
+                    for (int i = numBookmarks; i > position - 1; i--) {
                         String prevTitle = prefs.getString("bookmark_titles_" + (i - 1), "");
                         String prevUrl = prefs.getString("bookmark_urls_" + (i - 1), "");
 
@@ -676,18 +681,21 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         public void onPageFinished(WebView view, String url) {
             //Hide progress bar in action bar when page is finished loading
             mSwipeRefreshLayout.setRefreshing(false);
+
+            webView.loadUrl("javascript:window.alert = function(){}");
+
             if (desktopFlag) {
                 desktopFlag = false;
-                webView.getSettings().setUserAgentString("");
+                webView.getSettings().setUserAgentString(prefs.getString("ua_preference", ""));
             }
         }
 
         @Override
         public void onLoadResource(WebView view, String url) {
 
-            if (url.startsWith("http://www.youtube.com/get_video_info?")) {
+            if (url.startsWith("http://www.youtube.com") || url.startsWith("https://m.youtube.com")) {
                 try {
-                    String path = url.replace("http://www.youtube.com/get_video_info?", "");
+                    String path = url.replace("https://m.youtube.com", "");
 
                     String[] parqamValuePairs = path.split("&");
 
