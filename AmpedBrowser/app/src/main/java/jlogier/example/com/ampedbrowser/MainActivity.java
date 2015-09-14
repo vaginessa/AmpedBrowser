@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.MailTo;
@@ -14,14 +13,9 @@ import android.os.Build;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,16 +25,12 @@ import android.support.v7.widget.ShareActionProvider;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -52,35 +42,17 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends ActionBarActivity implements ShareActionProvider.OnShareTargetSelectedListener {
 
@@ -91,10 +63,8 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     private ActionBar mActionBar;
     private MyWebView webView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ScrollView mScrollView;
     private boolean temp;
     private String theme = "default";
-    private boolean screentoggle;
     private ShareActionProvider mShareActionProvider = null;
     private String currentUrl;
     private Context context;
@@ -106,7 +76,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         context = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         temp = prefs.getBoolean("private_preference", false);
-        screentoggle = prefs.getBoolean("fullscreen_preference", true);
         theme = prefs.getString("theme_preference", "default");
         if (temp)
             setTheme(R.style.AppTheme_Private);
@@ -133,10 +102,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         else
             setTheme(R.style.AppTheme);
 
-        if (prefs.getBoolean("fullscreen_preference", false)) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         SharedPreferences.Editor editor = prefs.edit();
         TelephonyManager connection = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
@@ -182,7 +148,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         mActionBar.setHomeButtonEnabled(false);
 
         // Retrieve the SwipeRefreshLayout and ListView instances
-        mSwipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId) - 50);
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
@@ -200,13 +166,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
 
 		/* Initializing and loading url in WebView */
         webView = (MyWebView)findViewById(R.id.webView);
-        /*webView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.onTouchEvent(event);
-                return true;
-            }
-        });*/
 
         webView.setWebViewClient(new MyWebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
@@ -227,8 +186,8 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setJavaScriptEnabled(!prefs.getBoolean("adblock_preference", false));
+        webView.getSettings().setUseWideViewPort(true);
         webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
-        webView.clearHistory();
 
         if (Build.VERSION.SDK_INT >= 21)
             webView.enableSlowWholeDocumentDraw();
@@ -444,17 +403,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     public void onResume() {
         if (prefs.getBoolean("private_preference", false) != temp || !prefs.getString("theme_preference", "default").equals(theme))
             recreate();
-        else if (prefs.getBoolean("fullscreen_preference", false) && !screentoggle) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            recreate();
-        }
-        else if (!prefs.getBoolean("fullscreen_preference", false) && screentoggle) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            recreate();
-        }
 
         webView.getSettings().setLoadsImagesAutomatically(!prefs.getBoolean("savedata_preference", false));
         webView.getSettings().setBlockNetworkImage(prefs.getBoolean("savedata_preference", false));
@@ -687,37 +635,6 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             if (desktopFlag) {
                 desktopFlag = false;
                 webView.getSettings().setUserAgentString(prefs.getString("ua_preference", ""));
-            }
-        }
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-
-            if (url.startsWith("http://www.youtube.com") || url.startsWith("https://m.youtube.com")) {
-                try {
-                    String path = url.replace("https://m.youtube.com", "");
-
-                    String[] parqamValuePairs = path.split("&");
-
-                    String videoId = null;
-
-                    for (String pair : parqamValuePairs) {
-                        if (pair.startsWith("video_id")) {
-                            videoId = pair.split("=")[1];
-                            break;
-                        }
-                    }
-
-                    if(videoId != null){
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com"))
-                                .setData(Uri.parse("http://www.youtube.com/watch?v=" + videoId)));
-
-                        return;
-                    }
-                } catch (Exception ex) {
-                }
-            } else {
-                super.onLoadResource(view, url);
             }
         }
     }

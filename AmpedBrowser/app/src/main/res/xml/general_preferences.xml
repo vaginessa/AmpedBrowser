@@ -35,11 +35,6 @@
             android:defaultValue="false"/>
 
         <CheckBoxPreference
-            android:key="fullscreen_preference"
-            android:title="@string/title_fullscreen_preference"
-            android:defaultValue="true" />
-
-        <CheckBoxPreference
             android:key="savedata_preference"
             android:defaultValue="false"
             android:title="@string/title_savedata_preference"

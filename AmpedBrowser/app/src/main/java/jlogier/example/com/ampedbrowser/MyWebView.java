@@ -107,19 +107,4 @@ public class MyWebView extends WebView {
             menu.add(0, ID_SHARELINK, 0, "Share link URL").setOnMenuItemClickListener(handler);
         }
     }
-
-    @Override
-    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        if (clampedX || clampedY) {
-            // Not scrolling, enable swipe to refresh
-        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-            // Disable swipe to refresh
-        }
-        return true;
-    }
 }
