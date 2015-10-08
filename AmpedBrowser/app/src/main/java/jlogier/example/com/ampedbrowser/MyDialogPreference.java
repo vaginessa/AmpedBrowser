@@ -14,7 +14,9 @@ public class MyDialogPreference extends DialogPreference {
     public MyDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         setDialogMessage("Amped Browser - Josh Logier\nVersion: " + getVersion() +
-                "\n\nFast. Simple. Beautiful. A web browser designed with mobile users in mind.\n\n"
+                "\n\nFast. Simple. Beautiful. A web browser designed with mobile users in mind.\n\n" +
+                "v1.5\n- Support for Android 6.0 Marshmallow\n- Restored fullscreen setting (will take effect on app restart)"
+                + "\n- Improved handling of links to other apps\n- Clicking on a link now opens in a new task for better multitasking\n\n"
                 + "v1.4.3\n- Fixed a bug that caused the device to hang and crash" + "\n- Removed fullscreen option. " +
                 "App now defaults to full screen mode\n\n" +
                 "v1.4.2\n- Removed the ability for the action bar to slide away. This was causing issues" +

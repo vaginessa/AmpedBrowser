@@ -27,6 +27,7 @@
 
     -- Fullscreen preference strings
     <string name="title_fullscreen_preference">Hide status bar</string>
+    <string name="summary_fullscreen_preference" translatable="false">This setting will take effect when the browser is restarted.</string>
 
     -- Save data preference strings
     <string name="title_savedata_preference">Save Data</string>
@@ -64,6 +65,7 @@
     <string name="title_dialog_preference">About</string>
 
     <string name="action_home">Home</string>
+    <string name="action_forward" translatable="false">Forward</string>
     <string name="action_window">New window</string>
     <string name="action_bookmarks">Add bookmark</string>
     <string name="action_desktop">Request desktop site</string>

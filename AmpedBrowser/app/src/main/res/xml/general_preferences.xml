@@ -29,6 +29,12 @@
             android:defaultValue="default"/>
 
         <CheckBoxPreference
+            android:key="hide_status_preference"
+            android:title="@string/title_fullscreen_preference"
+            android:summary="@string/summary_fullscreen_preference"
+            android:defaultValue="false" />
+
+        <CheckBoxPreference
             tools:targetApi="21"
             android:key="bookmark_preference"
             android:title="@string/title_bookmark_preference"

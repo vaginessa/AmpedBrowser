@@ -102,7 +102,8 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         else
             setTheme(R.style.AppTheme);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (prefs.getBoolean("hide_status_preference", false))
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         SharedPreferences.Editor editor = prefs.edit();
         TelephonyManager connection = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
@@ -152,7 +153,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         //mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId) - 50);
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
-        mSwipeRefreshLayout.setColorScheme(
+        mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.swipe_color_1, R.color.swipe_color_2,
                 R.color.swipe_color_3, R.color.swipe_color_4);
 
@@ -233,6 +234,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
         });
 
         Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri uri = intent.getData();
             String address = uri.toString();
@@ -250,6 +252,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimetype));
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 dm.enqueue(request);
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -338,6 +341,10 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
             webView.loadUrl("http://" + prefs.getString("homepage_preference", "www.google.com"));
             return true;
         }
+        else if (id == R.id.action_forward) {
+            webView.goForward();
+            return true;
+        }
         else if (id == R.id.action_window) {
             Intent newWindow = new Intent(this, MainActivity.class);
             newWindow.setType("text/plain");
@@ -350,6 +357,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 newWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             }
             startActivity(newWindow);
+            return true;
         }
         else if (id == R.id.action_bookmarks) {
             // Add to shared prefs, then update drawer list
@@ -576,20 +584,19 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     return true;
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(getApplicationContext(), "App not found", Toast.LENGTH_SHORT).show();
+                    view.loadUrl(Uri.parse(url).toString());
                     return true;
                 }
             }
-            else if (url.startsWith("market://")) {
+            else if (url.startsWith("market://") || url.contains("play.google.com")) {
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(url));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     Activity host = (Activity) view.getContext();
                     host.startActivity(intent);
                     return true;
                 } catch (ActivityNotFoundException e) {
                     // Google Play app is not installed, you may want to open the app store link
-                    Uri uri = Uri.parse(url);
-                    view.loadUrl("http://play.google.com/store/apps/" + uri.getHost() + "?" + uri.getQuery());
+                    view.loadUrl(Uri.parse(url).toString());
                     return false;
                 }
             }
@@ -597,8 +604,20 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 MailTo mt = MailTo.parse(url);
                 Intent i = newEmailIntent(MainActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
                 startActivity(i);
-                //view.reload();
                 return true;
+            }
+            else if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    // The following flags launch the app outside the current app
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+                    startActivity(intent);
+                    return true;
+                } catch (ActivityNotFoundException e) {
+                    view.loadUrl(Uri.parse(url).toString());
+                    return true;
+                }
             }
             else {
                 view.loadUrl(url);
