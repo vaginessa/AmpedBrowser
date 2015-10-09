@@ -8,8 +8,8 @@ android {
         applicationId "jlogier.example.com.ampedbrowser"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 20151007
-        versionName "1.5"
+        versionCode 20151008
+        versionName "1.5.1"
     }
     buildTypes {
         release {

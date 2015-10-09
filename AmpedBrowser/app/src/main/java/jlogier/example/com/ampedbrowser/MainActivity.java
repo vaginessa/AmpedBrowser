@@ -1,11 +1,17 @@
 package jlogier.example.com.ampedbrowser;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.MailTo;
 import android.net.Uri;
@@ -17,6 +23,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -30,8 +37,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
@@ -42,6 +51,7 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -70,6 +80,7 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
     private Context context;
     private ArrayAdapter<String> listViewAdapter;
     private boolean desktopFlag = false;
+    private float previousScrollValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,6 +302,19 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                 return true;
             }
         });
+
+        if (Build.VERSION.SDK_INT >= 22) {
+            webView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (scrollY > oldScrollY + 60 && getSupportActionBar().isShowing()) {
+                        getSupportActionBar().hide();
+                    } else if (scrollY < oldScrollY - 60 && !getSupportActionBar().isShowing()) {
+                        getSupportActionBar().show();
+                    }
+                }
+            });
+        }
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -581,11 +605,9 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
                     startActivity(intent);
-                    return true;
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(getApplicationContext(), "App not found", Toast.LENGTH_SHORT).show();
                     view.loadUrl(Uri.parse(url).toString());
-                    return true;
                 }
             }
             else if (url.startsWith("market://") || url.contains("play.google.com")) {
@@ -593,18 +615,15 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     Activity host = (Activity) view.getContext();
                     host.startActivity(intent);
-                    return true;
                 } catch (ActivityNotFoundException e) {
                     // Google Play app is not installed, you may want to open the app store link
                     view.loadUrl(Uri.parse(url).toString());
-                    return false;
                 }
             }
             else if (url.startsWith("mailto://")) {
                 MailTo mt = MailTo.parse(url);
                 Intent i = newEmailIntent(MainActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
                 startActivity(i);
-                return true;
             }
             else if (!url.startsWith("http://") && !url.startsWith("https://")) {
                 try {
@@ -613,16 +632,14 @@ public class MainActivity extends ActionBarActivity implements ShareActionProvid
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
                     startActivity(intent);
-                    return true;
                 } catch (ActivityNotFoundException e) {
                     view.loadUrl(Uri.parse(url).toString());
-                    return true;
                 }
             }
             else {
                 view.loadUrl(url);
             }
-            return true;
+            return false;
         }
 
         public Intent newEmailIntent(Context context, String address, String subject, String body, String cc) {
